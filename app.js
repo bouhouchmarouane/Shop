@@ -13,7 +13,8 @@ app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use(bodyParser.urlencoded());
-app.use(express.static(path.join(__dirname, 'public')));
+//app.use(express.static(path.join(__dirname, 'public')));
+app.use('/css', express.static(path.join(__dirname, 'node_modules', 'bulma', 'css')));
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
