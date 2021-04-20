@@ -22,7 +22,7 @@
                             <p></p>
                         </div>
                         <footer class="card-footer">
-                            <a href="#" class="card-footer-item">Add to cart</a>
+                            <a href="javascript:document.getElementById('cartForm').submit()" class="card-footer-item">Add to cart</a>
                             <a href="/product/<%=product.id%>" class="card-footer-item">Details</a>
                         </footer>
                     </div>
@@ -30,10 +30,12 @@
                 <%if(index % 5 == 4) { %>
                     </div>
                 <%} %>
+                <%-include('../includes/add-to-cart-form.ejs', {productId: product.id})%>
             <%}) %>
         <%} else {%>
             <h2>No products found</h2>
         <%}%>
     </main>
+    
 </body>
 </html>
