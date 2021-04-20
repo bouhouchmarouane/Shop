@@ -18,10 +18,10 @@
                         <div class="card-content">
                             <p class="title is-4"><%=product.title%></p>
                             <p class="title is-3"><%=product.price%> MAD</p>
-                            <div class="content"><%=product.description%></div>
+                            <div class="content"><div style="max-height: 70px; overflow: hidden;"><%=product.description%></div>...<a href="/product/<%=product.id%>">See more</a></div>
                         </div>
                         <footer class="card-footer">
-                            <a href="/admin/edit" class="card-footer-item">Edit</a>
+                            <a href="/admin/edit-product/<%=product.id%>" class="card-footer-item">Edit</a>
                             <a href="#" class="card-footer-item" style="background-color: tomato; color: white">Delete</a>
                         </footer>
                     </div>
