@@ -40,3 +40,10 @@ exports.getCheckout = (req, res) => {
         path: '/shop/checkout'
     });
 }
+
+exports.getOrders = (req, res) => {
+    res.render('shop/orders', {
+        pageTitle: 'Orders',
+        path: '/shop/orders'
+    });
+}

@@ -12,13 +12,18 @@
                     <div class="card">
                         <div class="card-image">
                             <figure class="image is-4by3">
-                                <img src="https://thewritelife.com/wp-content/uploads/2019/08/How-to-format-a-book.jpg" alt="<%=product.title%>">
+                                <img src="<%=product.imageUrl%>" alt="<%=product.title%>">
                             </figure>
                         </div>
                         <div class="card-content">
                             <p class="title is-4"><%=product.title%></p>
-                            <div class="content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
+                            <p class="title is-3"><%=product.price%> MAD</p>
+                            <div class="content"><%=product.description%></div>
                         </div>
+                        <footer class="card-footer">
+                            <a href="/admin/edit" class="card-footer-item">Edit</a>
+                            <a href="#" class="card-footer-item" style="background-color: tomato; color: white">Delete</a>
+                        </footer>
                     </div>
                 </div>
                 <%if(index % 5 == 4) { %>
