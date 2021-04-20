@@ -20,10 +20,14 @@ exports.getProductsList = (req, res) => {
     });
 }
 
-exports.getCart = (req, res) => {
-    res.render('shop/product-details', {
-        pageTitle: 'Product details',
-        path: '/shop/product-details'
+exports.getProductDetails = (req, res) => {
+    const productId = req.params.productId;
+    Product.findById(productId, product => {
+        res.render('shop/product-details', {
+            pageTitle: product.title,
+            path: '/shop/product-details',
+            product: product
+        });
     });
 }
 

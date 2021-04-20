@@ -3,7 +3,22 @@
 <body>
     <%-include('../includes/navigation.ejs')%>
     <main>
-    
+        <div class="columns">
+            <div class="column is-three-quarters">
+                <img src="<%=product.imageUrl%>" alt="product.title"/>
+            </div>
+            <div class="column">
+                <div class="card">
+                    <div class="card-content">
+                        <p class="title is-3"><%=product.price%> MAD</p>
+                        <div class="content"><%=product.description%></div>
+                    </div>
+                    <footer class="card-footer">
+                        <a href="#" class="card-footer-item">Add to cart</a>
+                    </footer>
+                </div>
+            </div>
+        </div>
     </main>
 </body>
 </html>
