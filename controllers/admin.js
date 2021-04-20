@@ -19,14 +19,15 @@ exports.getEditProduct = (req, res) => {
     });
 }
 
-exports.postAddProduct = (req, res) => {
+exports.postSaveProduct = (req, res) => {
+    const id = req.body.id;
     const title = req.body.title;
     const price = req.body.price;
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
-    const product = new Product(title, price, imageUrl, description);
+    const product = new Product(title, price, imageUrl, description, id);
     product.save();
-    res.redirect('/');
+    res.redirect('/admin/products-list');
 }
 
 exports.getProductsList = (req, res) => {
@@ -38,3 +39,14 @@ exports.getProductsList = (req, res) => {
         });
     });
 }
+
+exports.deleteProduct = (req, res) => {
+    Product.fetchAll(products => {
+        res.render('admin/products-list', {
+            pageTitle: 'Products',
+            path: '/admin/products-list',
+            products: products
+        });
+    });
+}
+

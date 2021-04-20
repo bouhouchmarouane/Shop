@@ -3,7 +3,7 @@
     <body>
         <%-include('../includes/navigation.ejs')%>
         <main>
-            <form action="/admin/add-product" method="POST" class="product-form">
+            <form action="/admin/save-product" method="POST" class="product-form">
                 <input type="hidden" name="id" value="<%=product?.id%>">
                 <div class="columns">
                     <div class="column is-one-third is-offset-one-third">
@@ -58,7 +58,7 @@
                 <div class="columns">
                     <div class="column is-one-third is-offset-one-third">
                         <div class="control">
-                            <button class="button is-link">Submit</button>
+                            <button class="button is-link">Save</button>
                         </div>         
                     </div>
                 </div> 
