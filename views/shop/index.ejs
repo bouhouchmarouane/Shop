@@ -1,0 +1,33 @@
+<%-include('../includes/head.ejs')%>
+</head>
+<body>
+    <%-include('../includes/navigation.ejs')%>
+    <main>
+        <%if(products.length > 0) {%>
+            <% products.forEach((product, index) => { %>
+                <%if(index % 5 == 0) { %>
+                    <div class="columns">
+                <%} %>
+                <div class="column is-one-fifth">
+                    <div class="card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="https://thewritelife.com/wp-content/uploads/2019/08/How-to-format-a-book.jpg" alt="<%=product.title%>">
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <p class="title is-4"><%=product.title%></p>
+                            <div class="content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.</div>
+                        </div>
+                    </div>
+                </div>
+                <%if(index % 5 == 4) { %>
+                    </div>
+                <%} %>
+            <%}) %>
+        <%} else {%>
+            <h2>No products found</h2>
+        <%}%>
+    </main>
+</body>
+</html>

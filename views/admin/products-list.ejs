@@ -1,0 +1,38 @@
+<%-include('../includes/head.ejs')%>
+</head>
+<body>
+    <%-include('../includes/navigation.ejs')%>
+    <main>
+        <%if(products.length > 0) {%>
+            <% products.forEach((product, index) => { %>
+                <%if(index % 5 == 0) { %>
+                    <div class="columns">
+                <%} %>
+                <div class="column is-one-fifth">
+                    <div class="card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="<%=product.imageUrl%>" alt="<%=product.title%>">
+                            </figure>
+                        </div>
+                        <div class="card-content">
+                            <p class="title is-4"><%=product.title%></p>
+                            <p class="title is-3"><%=product.price%> MAD</p>
+                            <div class="content"><%=product.description%></div>
+                        </div>
+                        <footer class="card-footer">
+                            <a href="/admin/edit" class="card-footer-item">Edit</a>
+                            <a href="#" class="card-footer-item" style="background-color: tomato; color: white">Delete</a>
+                        </footer>
+                    </div>
+                </div>
+                <%if(index % 5 == 4) { %>
+                    </div>
+                <%} %>
+            <%}) %>
+        <%} else {%>
+            <h2>No products found</h2>
+        <%}%>
+    </main>
+</body>
+</html>
