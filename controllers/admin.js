@@ -10,7 +10,7 @@ exports.getAddProduct = (req, res) => {
 
 exports.getEditProduct = (req, res) => {
     const productId = req.params.productId;
-    const product = Product.findById(productId, product => {
+    Product.findById(productId, product => {
         res.render('admin/edit-product', {
             pageTitle: 'Edit Product',
             path: '/admin/edit-product',
@@ -41,12 +41,7 @@ exports.getProductsList = (req, res) => {
 }
 
 exports.deleteProduct = (req, res) => {
-    Product.fetchAll(products => {
-        res.render('admin/products-list', {
-            pageTitle: 'Products',
-            path: '/admin/products-list',
-            products: products
-        });
-    });
+    const productId = req.body.productId;
+    Product.delete(productId, () => res.redirect('/admin/products-list'));
 }
 

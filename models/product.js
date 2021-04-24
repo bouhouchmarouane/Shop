@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const Cart = require('./cart');
+
 const products = [];
 const p = path.join(
     path.dirname(process.mainModule.filename), 
@@ -28,10 +30,10 @@ module.exports = class Product {
     }
 
     save() {
-        getProductsFromFile((products) => {
+        getProductsFromFile(products => {
             let prodsToSave;
             if(this.id === '') {
-                this.id = Math.random().toString();
+                this.id = Math.floor(Math.random()*10000000).toString();
                 products.push(this);
                 prodsToSave = products;
             }
@@ -39,9 +41,9 @@ module.exports = class Product {
                 const index = products.findIndex(p => p.id === this.id);
                 const editedProducts = [...products];
                 editedProducts[index] = this;
-                prodsToSave = editedProducts
+                prodsToSave = editedProducts;
             }
-            fs.writeFile(p, JSON.stringify(prodsToSave), (error) => {
+            fs.writeFile(p, JSON.stringify(prodsToSave), error => {
                 if(error) {
                     console.log(error);
                 }
@@ -49,14 +51,29 @@ module.exports = class Product {
         });
     }
 
+    static delete(productId, callback) {
+        getProductsFromFile(products => {
+            const newProducts = products.filter(p => p.id !== productId);
+            Product.findById(productId, product => {
+                Cart.deleteProduct(product);
+                fs.writeFile(p, JSON.stringify(newProducts), error => {
+                    if(error) {
+                        console.log(error);
+                    }
+                    callback();
+                });
+            });
+        });
+    }
+
     static fetchAll(callback) {
-        getProductsFromFile(callback)
+        getProductsFromFile(callback);
     }
 
     static findById(id, callback) {
         getProductsFromFile(products => {
-            const product = products.find(p => p.id === id); 
+            const product = products.find(p => p.id === id);
             callback(product);
-        })
+        });
     }
 }
