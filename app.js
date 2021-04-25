@@ -19,10 +19,6 @@ app.use('/css', express.static(path.join(__dirname, 'node_modules', 'bulma', 'cs
 app.use('/css', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'js')));
 
-app.use('/admin', adminRoutes);
-app.use(shopRoutes);
-app.use(errorsRoutes);
-
 app.use((req, res, next) => {
     User.findByPk(1)
         .then(user => {
@@ -32,7 +28,11 @@ app.use((req, res, next) => {
         .catch(error => console.log(error));
 });
 
-Product.belongsTo(User, {
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
+app.use(errorsRoutes);
+
+User.hasMany(Product, {
     constraints: true,
     onDelete: 'CASCADE'
 });

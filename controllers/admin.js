@@ -10,8 +10,9 @@ exports.getAddProduct = (req, res) => {
 
 exports.getEditProduct = (req, res) => {
     const productId = req.params.productId;
-    Product.findByPk(productId)
-        .then(product => {
+    req.user.getProducts({where: { id: productId}})
+        .then(products => {
+            const product = products[0];
             res.render('admin/edit-product', {
                 pageTitle: 'Edit Product',
                 path: '/admin/edit-product',
@@ -40,18 +41,19 @@ exports.postSaveProduct = (req, res) => {
             .catch(error => console.log(error));
     }
     else {
-        Product.create({
+        req.user.createProduct({
             title,
             price,
             imageUrl,
             description
-        }).then(() => res.redirect('/admin/products-list'))
-        .catch(error => console.log(error));
+        })
+            .then(() => res.redirect('/admin/products-list'))
+            .catch(error => console.log(error));
     }
 }
 
 exports.getProductsList = (req, res) => {
-    Product.findAll()
+    req.user.getProducts()
         .then(products => {
             res.render('admin/products-list', {
                 pageTitle: 'Products',
