@@ -3,7 +3,55 @@
 <body>
     <%-include('../includes/navigation.ejs')%>
     <main>
-    
+        <%if(orders.length > 0) {%>
+            <% orders.forEach((order) => { %>
+                <div class="columns">
+                    <div class="column is-half is-offset-one-quarter">
+                        <div class="box">
+                            <table border="0">
+                                <tr>
+                                    <td>Order n° </td>
+                                    <th><%=order.id%></th>
+                                </tr>
+                                <tr>
+                                    <td>Date </td>
+                                    <th><%=order.createdAt.toLocaleDateString()%></th>
+                                </tr>
+                            </table>
+                            <hr/>
+                            <table class="table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%let totalPrice = 0%>
+                                    <% order.products.forEach((product) => { %>
+                                        <tr>
+                                            <td><%=product.title%></td>
+                                            <td><%=product.price%></td>
+                                            <td><%=product.orderItem.quantity%></td>
+                                            <th><%=product.orderItem.quantity * product.price%> MAD</th>
+                                        </tr>
+                                        <%totalPrice += product.orderItem.quantity * product.price %>
+                                    <%}) %>
+                                    <tr>
+                                        <th colspan="3">Total</th>
+                                        <th><%=totalPrice%> MAD</th>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            <%}) %>              
+        <%} else {%>
+            2
+        <%} %>
     </main>
 </body>
 </html>
