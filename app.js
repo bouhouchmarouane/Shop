@@ -8,6 +8,8 @@ const errorsRoutes = require('./routes/errors');
 const sequelize = require('./util/database');
 const Product = require('./models/product');
 const User = require('./models/user');
+const Cart = require('./models/cart');
+const CartItem = require('./models/cart-item');
 
 const app = express();
 
@@ -36,6 +38,9 @@ User.hasMany(Product, {
     constraints: true,
     onDelete: 'CASCADE'
 });
+User.hasOne(Cart);
+Cart.belongsToMany(Product, {through: CartItem});
+
 sequelize.sync().then(() => {
     return User.findByPk(1);
 })
