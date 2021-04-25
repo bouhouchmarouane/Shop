@@ -26,8 +26,10 @@ exports.postSaveProduct = (req, res) => {
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
     const product = new Product(title, price, imageUrl, description, id);
-    product.save();
-    res.redirect('/admin/products-list');
+    product.save()
+        .then(() => res.redirect('/admin/products-list'))
+        .catch(error => console.log(error));
+    
 }
 
 exports.getProductsList = (req, res) => {
