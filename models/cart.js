@@ -38,7 +38,7 @@ module.exports = class Cart {
         });
     }
 
-    static deleteProduct(product) {
+    static deleteProduct(product, callback) {
         fs.readFile(p, (error, data) => {
             if(!error) {
                 const cart = JSON.parse(data);
@@ -52,8 +52,20 @@ module.exports = class Cart {
                     if(error) {
                         console.log(error);
                     }
+                    callback();
                 });
             }
         });
     }
-}
+
+    static getCart(callback) {
+        fs.readFile(p, (error, data) => {            
+            if(error) {
+                callback({products: [], totalPrice: 0});
+            }
+            else {
+                callback(JSON.parse(data));
+            }
+        });
+    }
+ }
