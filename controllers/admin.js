@@ -10,12 +10,13 @@ exports.getAddProduct = (req, res) => {
 
 exports.getEditProduct = (req, res) => {
     const productId = req.params.productId;
-    Product.findById(productId)
-        .then(([product]) => {
+    req.user.getProducts({where: { id: productId}})
+        .then(products => {
+            const product = products[0];
             res.render('admin/edit-product', {
                 pageTitle: 'Edit Product',
                 path: '/admin/edit-product',
-                product: product[0]
+                product: product
             });
         })
         .catch(error => console.log(error));
@@ -27,16 +28,33 @@ exports.postSaveProduct = (req, res) => {
     const price = req.body.price;
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
-    const product = new Product(title, price, imageUrl, description, id);
-    product.save()
-        .then(() => res.redirect('/admin/products-list'))
-        .catch(error => console.log(error));
-    
+    if(id !== '') {
+        Product.findByPk(id)
+            .then(product => {
+                product.title = title;
+                product.price = price;
+                product.imageUrl = imageUrl;
+                product.description =description;
+                return product.save()
+            })
+            .then(() => res.redirect('/admin/products-list'))
+            .catch(error => console.log(error));
+    }
+    else {
+        req.user.createProduct({
+            title,
+            price,
+            imageUrl,
+            description
+        })
+            .then(() => res.redirect('/admin/products-list'))
+            .catch(error => console.log(error));
+    }
 }
 
 exports.getProductsList = (req, res) => {
-    Product.fetchAll()
-        .then(([products]) => {
+    req.user.getProducts()
+        .then(products => {
             res.render('admin/products-list', {
                 pageTitle: 'Products',
                 path: '/admin/products-list',
@@ -48,6 +66,11 @@ exports.getProductsList = (req, res) => {
 
 exports.deleteProduct = (req, res) => {
     const productId = req.body.productId;
-    Product.delete(productId, () => res.redirect('/admin/products-list'));
+    Product.findByPk(productId)
+        .then(product => {
+            return product.destroy();
+        })
+        .then(() => res.redirect('/admin/products-list'))
+        .catch(error => console.log(error));
 }
 
