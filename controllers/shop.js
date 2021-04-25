@@ -41,34 +41,45 @@ exports.getProductDetails = (req, res) => {
 
 exports.getCart = (req, res) => {
     const productsToRender = [];
-    Cart.getCart(cart => {
-        const cartPropductIds = cart.products.map(p => p.id);
-        Product.fetchAll()
-            .then(([products]) => {
-                for(cartProduct of cart.products) {
-                    productsToRender.push({
-                        "product": products.find(p => p.id === cartProduct.id),
-                        "quantity": cartProduct.quantity
-                    });
-                }
-                res.render('shop/cart', {
-                    pageTitle: 'Cart',
-                    path: '/shop/cart',
-                    cart: productsToRender,
-                    totalPrice: cart.totalPrice
-                });
-            })
-            .catch(error => console.log(error));
-    });
+    req.user.getCart()
+        .then(cart => {
+            console.log("cart", cart);
+            return cart.getProducts();
+        })
+        .then(products => {
+            res.render('shop/cart', {
+                pageTitle: 'Cart',
+                path: '/shop/cart',
+                products: products
+            });
+        })
+        .catch(error => console.log(error));
 }
 
 exports.PostCart = (req, res) => {
     const productId = req.body.productId;
-    Product.findById(productId)
-        .then(([product]) => {
-            Cart.addProduct(product[0]);
-            res.redirect('/cart');
+    let fetchedCart;
+    let newQuantity;
+    req.user.getCart()
+        .then(cart => {
+            fetchedCart = cart;
+            return cart.getProducts({where: {id: productId}});
         })
+        .then(products => {
+            if(products.length === 0) {
+                newQuantity = 1;
+                return Product.findByPk(productId);
+            }
+            else {
+                const product = products[0];
+                newQuantity = product.cartItem.quantity + 1;
+                return product;
+            }
+        })
+        .then(product => {
+            return fetchedCart.addProduct(product, {through: {quantity: newQuantity}});
+        })
+        .then(() => res.redirect('/cart'))
         .catch(error => console.log(error));
 }
 
