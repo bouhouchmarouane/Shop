@@ -5,7 +5,7 @@ const path = require('path');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const errorsRoutes = require('./routes/errors');
-const database = require('./util/database');
+const sequelize = require('./util/database');
 
 const app = express();
 
@@ -21,4 +21,8 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(errorsRoutes);
 
-app.listen(80);
+sequelize.sync().then(result => {
+    console.log(result);
+    app.listen(80);
+}).catch(error => console.log(error));
+
