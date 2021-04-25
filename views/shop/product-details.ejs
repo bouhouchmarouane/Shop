@@ -3,7 +3,23 @@
 <body>
     <%-include('../includes/navigation.ejs')%>
     <main>
-    
+        <div class="columns">
+            <div class="column is-three-quarters">
+                <img src="<%=product.imageUrl%>" alt="<%=product.title%>"/>
+            </div>
+            <div class="column">
+                <div class="card">
+                    <div class="card-content">
+                        <p class="title is-3"><%=product.price%> MAD</p>
+                        <div class="content"><%=product.description%></div>
+                    </div>
+                    <footer class="card-footer">
+                        <a href="javascript:document.getElementById('cartForm<%=product.id%>').submit()" class="card-footer-item">Add to cart</a>
+                    </footer>
+                </div>
+            </div>
+        </div>
     </main>
+    <%-include('../includes/add-to-cart-form.ejs', {productId: product.id})%>
 </body>
 </html>
