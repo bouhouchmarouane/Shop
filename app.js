@@ -4,7 +4,7 @@ const path = require('path');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
-const errorsController = require('./controllers/errors');
+const errorsRoutes = require('./routes/errors');
 
 const app = express();
 
@@ -19,6 +19,6 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
-app.use(errorsController.get404);
+app.use(errorsRoutes);
 
 app.listen(80);

@@ -1,9 +1,68 @@
 <%-include('../includes/head.ejs')%>
 </head>
-<body>
-    <%-include('../includes/navigation.ejs')%>
-    <main>
-    
-    </main>
-</body>
+    <body>
+        <%-include('../includes/navigation.ejs')%>
+        <main>
+            <form action="/admin/save-product" method="POST" class="product-form">
+                <input type="hidden" name="id" value="<%=product?.id%>">
+                <div class="columns">
+                    <div class="column is-one-third is-offset-one-third">
+                        <div class="field">
+                            <label class="label">Title</label>
+                            <p class="control has-icons-left">
+                            <input class="input" type="text" name="title" value="<%=product?.title%>">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-heading"></i>
+                            </span>
+                            </p>
+                        </div>             
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column is-one-third is-offset-one-third">
+                        <div class="field">
+                            <label class="label">Price</label>
+                            <p class="control has-icons-left">
+                            <input class="input" type="text" name="price" value="<%=product?.price%>">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-dollar-sign"></i>
+                            </span>
+                            </p>
+                        </div>             
+                    </div>
+                </div> 
+                <div class="columns">
+                    <div class="column is-one-third is-offset-one-third">
+                        <div class="field">
+                            <label class="label">Image URL</label>
+                            <p class="control has-icons-left">
+                            <input class="input" type="text" name="imageUrl" value="<%=product?.imageUrl%>">
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-image"></i>
+                            </span>
+                            </p>
+                        </div>             
+                    </div>
+                </div> 
+                </div> 
+                <div class="columns">
+                    <div class="column is-one-third is-offset-one-third">
+                        <div class="field">Description</label>
+                            <div class="control">
+                            <textarea class="textarea" name="description" ><%=product?.description%></textarea>
+                            </div>
+                        </div>           
+                    </div>
+                </div> 
+                </div> 
+                <div class="columns">
+                    <div class="column is-one-third is-offset-one-third">
+                        <div class="control">
+                            <button class="button is-link">Save</button>
+                        </div>         
+                    </div>
+                </div> 
+            </form>
+        </main>
+    </body>
 </html>
