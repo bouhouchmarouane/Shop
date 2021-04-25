@@ -23,11 +23,31 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(errorsRoutes);
 
+app.use((req, res, next) => {
+    User.findByPk(1)
+        .then(user => {
+            req.user = user;
+            next();
+        })
+        .catch(error => console.log(error));
+});
+
 Product.belongsTo(User, {
     constraints: true,
     onDelete: 'CASCADE'
 });
-sequelize.sync({force: true}).then(result => {
-    app.listen(80);
-}).catch(error => console.log(error));
+sequelize.sync().then(() => {
+    return User.findByPk(1);
+})
+    .then(user => {
+        if(!user) {
+            return User.create({
+                name: 'Marouane',
+                email: 'marouane@gmail.com'
+            });
+        }
+        return user
+    })
+    .then(() => app.listen(80))
+    .catch(error => console.log(error));
 
