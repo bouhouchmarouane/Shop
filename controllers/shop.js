@@ -12,13 +12,15 @@ exports.getIndex = (req, res) => {
 }
 
 exports.getProductsList = (req, res) => {
-    Product.fetchAll(products => {
-        res.render('shop/products-list', {
-            pageTitle: 'Products',
-            path: '/shop/products-list',
-            products: products
-        });
-    });
+    Product.fetchAll()
+        .then(([rows, fieldData]) => {
+            res.render('shop/products-list', {
+                pageTitle: 'Products',
+                path: '/shop/products-list',
+                products: rows
+            });
+        })
+        .catch(error => console.log(error));
 }
 
 exports.getProductDetails = (req, res) => {

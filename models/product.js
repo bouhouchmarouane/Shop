@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+const database = require('../util/database');
 
 const Cart = require('./cart');
 
@@ -67,7 +66,7 @@ module.exports = class Product {
     }
 
     static fetchAll(callback) {
-        getProductsFromFile(callback);
+        return database.execute('select * from products');
     }
 
     static findById(id, callback) {
