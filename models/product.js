@@ -18,7 +18,7 @@ const Product = sequelize.define('product', {
         allowNull: false
     },
     imageUrl: Sequelize.STRING,
-    descrition: Sequelize.STRING
+    description: Sequelize.STRING
 });
 
 module.exports = Product;

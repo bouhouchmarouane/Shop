@@ -27,11 +27,13 @@ exports.postSaveProduct = (req, res) => {
     const price = req.body.price;
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
-    const product = new Product(title, price, imageUrl, description, id);
-    product.save()
-        .then(() => res.redirect('/admin/products-list'))
-        .catch(error => console.log(error));
-    
+    Product.create({
+        title,
+        price,
+        imageUrl,
+        description
+    }).then(() => res.redirect('/admin/products-list'))
+    .catch(error => console.log(error));
 }
 
 exports.getProductsList = (req, res) => {
