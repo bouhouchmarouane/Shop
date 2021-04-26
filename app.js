@@ -2,16 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const adminRoutes = require('./routes/admin');
-const shopRoutes = require('./routes/shop');
-const errorsRoutes = require('./routes/errors');
-const sequelize = require('./util/database');
-const Product = require('./models/product');
-const User = require('./models/user');
-const Cart = require('./models/cart');
-const CartItem = require('./models/cart-item');
-const Order = require('./models/order');
-const OrderItem = require('./models/order-item');
+// const adminRoutes = require('./routes/admin');
+// const shopRoutes = require('./routes/shop');
+// const errorsRoutes = require('./routes/errors');
+// const User = require('./models/user');
+const mongoConnect = require('./util/database');
 
 const app = express();
 
@@ -24,46 +19,18 @@ app.use('/css', express.static(path.join(__dirname, 'node_modules', '@fortawesom
 app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'js')));
 
 app.use((req, res, next) => {
-    User.findByPk(1)
-        .then(user => {
-            req.user = user;
-            next();
-        })
-        .catch(error => console.log(error));
+    // User.findByPk(1)
+    //     .then(user => {
+    //         req.user = user;
+    //         next();
+    //     })
+    //     .catch(error => console.log(error));
 });
 
-app.use('/admin', adminRoutes);
-app.use(shopRoutes);
-app.use(errorsRoutes);
+// app.use('/admin', adminRoutes);
+// app.use(shopRoutes);
+// app.use(errorsRoutes);
 
-User.hasMany(Product, {constraints: true, onDelete: 'CASCADE'});
-User.hasOne(Cart);
-Cart.belongsToMany(Product, {through: CartItem});
-User.hasMany(Order);
-Order.belongsToMany(Product, {through: OrderItem});
-
-let currentUser;
-sequelize.sync({force: false}).then(() => {
-    return User.findByPk(1);
+mongoConnect(client => {
+    app.listen(80);
 })
-    .then(user => {
-        if(!user) {
-            return User.create({
-                name: 'Marouane',
-                email: 'marouane@gmail.com'
-            });
-        }
-        return user
-    })
-    .then(user => {
-        currentUser = user;
-        return user.getCart()
-    })
-    .then(cart => {
-        if(!cart)
-            return currentUser.createCart();
-        return currentUser;
-    })
-    .then(app.listen(80))
-    .catch(error => console.log(error));
-
