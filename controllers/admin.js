@@ -28,6 +28,7 @@ exports.postSaveProduct = (req, res) => {
     const price = req.body.price;
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
+    const product = new Product(title, price, imageUrl, description);
     if(id !== '') {
         Product.findByPk(id)
             .then(product => {
@@ -41,12 +42,7 @@ exports.postSaveProduct = (req, res) => {
             .catch(error => console.log(error));
     }
     else {
-        req.user.createProduct({
-            title,
-            price,
-            imageUrl,
-            description
-        })
+        product.save()
             .then(() => res.redirect('/admin/products-list'))
             .catch(error => console.log(error));
     }
