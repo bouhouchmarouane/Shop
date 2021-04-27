@@ -10,9 +10,8 @@ exports.getAddProduct = (req, res) => {
 
 exports.getEditProduct = (req, res) => {
     const productId = req.params.productId;
-    req.user.getProducts({where: { id: productId}})
-        .then(products => {
-            const product = products[0];
+    Product.findById(productId)
+        .then(product => {
             res.render('admin/edit-product', {
                 pageTitle: 'Edit Product',
                 path: '/admin/edit-product',
@@ -28,20 +27,14 @@ exports.postSaveProduct = (req, res) => {
     const price = req.body.price;
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
-    const product = new Product(title, price, imageUrl, description);
     if(id !== '') {
-        Product.findByPk(id)
-            .then(product => {
-                product.title = title;
-                product.price = price;
-                product.imageUrl = imageUrl;
-                product.description =description;
-                return product.save()
-            })
+        const editedProduct = new Product(title, price, imageUrl, description, id);
+        return editedProduct.save()
             .then(() => res.redirect('/admin/products-list'))
             .catch(error => console.log(error));
     }
     else {
+        const product = new Product(title, price, imageUrl, description);
         product.save()
             .then(() => res.redirect('/admin/products-list'))
             .catch(error => console.log(error));
@@ -49,7 +42,7 @@ exports.postSaveProduct = (req, res) => {
 }
 
 exports.getProductsList = (req, res) => {
-    req.user.getProducts()
+    Product.fetchAll()
         .then(products => {
             res.render('admin/products-list', {
                 pageTitle: 'Products',

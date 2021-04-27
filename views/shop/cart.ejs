@@ -26,14 +26,14 @@
                                         <td><%=product.cartItem.quantity%></td>
                                         <th><%=product.cartItem.quantity * product.price%> MAD</th>
                                         <td>
-                                            <button class="button is-danger is-outlined" style="float: right;" onclick="document.getElementById('deleteFromCart<%=product.id%>').submit()">
+                                            <button class="button is-danger is-outlined" style="float: right;" onclick="document.getElementById('deleteFromCart<%=product._id%>').submit()">
                                                 <span>Delete</span>
                                                 <span class="icon is-small">
                                                 <i class="fas fa-times"></i>
                                                 </span>
                                             </button>
-                                            <form id="deleteFromCart<%=product.id%>" action="/delete-from-cart" method="POST">
-                                                <input type="hidden" name="productId" value="<%=product.id%>">
+                                            <form id="deleteFromCart<%=product._id%>" action="/delete-from-cart" method="POST">
+                                                <input type="hidden" name="productId" value="<%=product._id%>">
                                             </form>
                                         </td>
                                     </tr>
