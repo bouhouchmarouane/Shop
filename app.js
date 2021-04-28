@@ -19,12 +19,12 @@ app.use('/css', express.static(path.join(__dirname, 'node_modules', '@fortawesom
 app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'js')));
 
 app.use((req, res, next) => {
-    // User.findByPk(1)
-    //     .then(user => {
-    //         req.user = user;
-    //         next();
-    //     })
-    //     .catch(error => console.log(error));
+    User.findById("6089d3284fc753884fbf3822")
+        .then(user => {
+            req.user = user;
+            next();
+        })
+        .catch(error => console.log(error));
     next();
 });
 
