@@ -28,6 +28,11 @@ class Product {
         const db = getDb();
         return db.collection('products').find({_id: new mongodb.ObjectId(productId)}).next();
     }
+
+    static delete(productId) {
+        const db = getDb();
+        return db.collection('products').deleteOne({_id: new mongodb.ObjectId(productId)});
+    }
 }
 
 module.exports = Product;
