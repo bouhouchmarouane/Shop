@@ -5,7 +5,7 @@ const path = require('path');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const errorsRoutes = require('./routes/errors');
-// const User = require('./models/user');
+const User = require('./models/user');
 const mongoConnect = require('./util/database').mongoConnect;
 
 const app = express();
@@ -20,12 +20,11 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome
 
 app.use((req, res, next) => {
     User.findById("6089d3284fc753884fbf3822")
-        .then(user => {
+        .then(user => {            
             req.user = user;
             next();
         })
         .catch(error => console.log(error));
-    next();
 });
 
 app.use('/admin', adminRoutes);

@@ -27,14 +27,15 @@ exports.postSaveProduct = (req, res) => {
     const price = req.body.price;
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
+    const userId = req.user._id;
     if(id !== '') {
-        const editedProduct = new Product(title, price, imageUrl, description, id);
+        const editedProduct = new Product(title, price, imageUrl, description, id, userId);
         return editedProduct.save()
             .then(() => res.redirect('/admin/products-list'))
             .catch(error => console.log(error));
     }
     else {
-        const product = new Product(title, price, imageUrl, description);
+        const product = new Product(title, price, imageUrl, description, null, userId);
         product.save()
             .then(() => res.redirect('/admin/products-list'))
             .catch(error => console.log(error));

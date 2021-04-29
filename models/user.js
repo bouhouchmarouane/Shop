@@ -29,4 +29,4 @@ class User {
     }
 }
 
-module.exports = Product;
+module.exports = User;
