@@ -86,24 +86,7 @@ exports.deleteFromCart = (req, res) => {
 }
 
 exports.createOrder = (req, res) => {
-    let fetchedCart;
-    req.user.getCart()
-        .then(cart => {
-            fetchedCart = cart;
-            return cart.getProducts();
-        })
-        .then(products => {
-            return req.user.createOrder()
-                .then(order => {
-                    return order.addProducts(products.map(product => {
-                        product.orderItem = {quantity: product.cartItem.quantity};
-                        return product;
-                    }));
-                });
-        })
-        .then(() => {
-            return fetchedCart.setProducts(null);
-        })
+    req.user.addOrder()
         .then(() => res.redirect('/orders'))
         .catch(error => console.log(error));
 }

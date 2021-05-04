@@ -68,6 +68,15 @@ class User {
         const updatedCart = this.cart.filter(item => item.productId != productId);
         return db.collection('users').updateOne({_id: new ObjectId(this._id)}, {$set: {cart: updatedCart}});
     }
+
+    addOrder() {
+        const db = getDb();
+        return db.collection('orders').insertOne({items: this.cart, date: new Date()})
+            .then(() => {
+                this.cart = [];
+                return db.collection('users').updateOne({_id: new ObjectId(this._id)}, {$set: {cart: []}});
+            })
+    }
 }
 
 module.exports = User;
