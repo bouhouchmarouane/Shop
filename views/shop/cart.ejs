@@ -23,8 +23,8 @@
                                     <tr>
                                         <td><%=product.title%></td>
                                         <td><%=product.price%></td>
-                                        <td><%=product.cartItem.quantity%></td>
-                                        <th><%=product.cartItem.quantity * product.price%> MAD</th>
+                                        <td><%=product.quantity%></td>
+                                        <th><%=product.quantity * product.price%> MAD</th>
                                         <td>
                                             <button class="button is-danger is-outlined" style="float: right;" onclick="document.getElementById('deleteFromCart<%=product._id%>').submit()">
                                                 <span>Delete</span>
@@ -37,7 +37,7 @@
                                             </form>
                                         </td>
                                     </tr>
-                                    <%totalPrice += product.cartItem.quantity * product.price %>
+                                    <%totalPrice += product.quantity * product.price %>
                                 <%}) %>
                                 <tr>
                                     <th colspan="3">Total</th>

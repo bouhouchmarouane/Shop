@@ -11,7 +11,7 @@ class User {
         if(cart)
             this.cart = cart;
         else {
-            this.cart = {items: [], totalPrice: 0}
+            this.cart = [];
         }
         this._id = id;
     }
@@ -37,30 +37,31 @@ class User {
     }
 
     addToCart(product) {
-        const cartProductIndex = this.cart.items.findIndex(item => {
-            console.log(item.productId)
-            console.log(product._id)
-
-            console.log(item.productId.equals(product._id))
-            return item.productId.equals(product._id)
-        });
-        let updatedCart = {...this.cart};
-        updatedCart.items = [...this.cart.items];
-        updatedCart.totalPrice = this.cart.totalPrice;
+        const cartProductIndex = this.cart.findIndex(item => item.productId.equals(product._id));
+        let updatedCart = [...this.cart];
         if(cartProductIndex >= 0) {
-            console.log("here1")
-            const cartProduct = this.cart.items[cartProductIndex];
+            const cartProduct = this.cart[cartProductIndex];
             const updatedCartProduct = {...cartProduct}; 
             updatedCartProduct.quantity = updatedCartProduct.quantity + 1;
-            updatedCart.items[cartProductIndex] = updatedCartProduct;
+            updatedCart[cartProductIndex] = updatedCartProduct;
         }
         else {
-            console.log("here2ddd")
-            updatedCart.items.push({productId: new ObjectId(product._id), quantity: 1});                                      
+            updatedCart.push({productId: new ObjectId(product._id), quantity: 1});                                      
         }
-        updatedCart.totalPrice = parseFloat(updatedCart.totalPrice) + parseFloat(product.price);
         const db = getDb();  
         return db.collection('users').updateOne({_id: new ObjectId(this._id)}, {$set: {cart: updatedCart}});
+    }
+
+    getCart() {
+        const db = getDb();
+        const productIds = this.cart.map(item => item.productId);
+        console.log(productIds);
+        return db.collection('products').find({_id: {$in: productIds}}).toArray()
+            .then(products => {
+                return products.map(p => {
+                    return {...p, quantity: this.cart.find(item => item.productId.equals(p._id)).quantity};
+                })
+            })
     }
 }
 
