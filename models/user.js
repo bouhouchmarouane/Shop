@@ -55,13 +55,18 @@ class User {
     getCart() {
         const db = getDb();
         const productIds = this.cart.map(item => item.productId);
-        console.log(productIds);
         return db.collection('products').find({_id: {$in: productIds}}).toArray()
             .then(products => {
                 return products.map(p => {
                     return {...p, quantity: this.cart.find(item => item.productId.equals(p._id)).quantity};
                 })
             })
+    }
+
+    deleteFromCart(productId) {
+        const db = getDb();
+        const updatedCart = this.cart.filter(item => item.productId != productId);
+        return db.collection('users').updateOne({_id: new ObjectId(this._id)}, {$set: {cart: updatedCart}});
     }
 }
 
