@@ -43,7 +43,7 @@ exports.getCart = (req, res) => {
             res.render('shop/cart', {
                 pageTitle: 'Cart',
                 path: '/shop/cart',
-                products: products
+                products
             });
         })
         .catch(error => console.log(error));
@@ -67,7 +67,7 @@ exports.getCheckout = (req, res) => {
 }
 
 exports.getOrders = (req, res) => {
-    req.user.getOrders({include: ['products']})
+    req.user.getOrders()
         .then(orders => {
             res.render('shop/orders', {
                 pageTitle: 'Orders',
