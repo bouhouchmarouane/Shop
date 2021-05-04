@@ -71,11 +71,20 @@ class User {
 
     addOrder() {
         const db = getDb();
-        return db.collection('orders').insertOne({items: this.cart, date: new Date()})
-            .then(() => {
-                this.cart = [];
-                return db.collection('users').updateOne({_id: new ObjectId(this._id)}, {$set: {cart: []}});
+        this.getCart()
+            .then(products => {
+                const order = {
+                    items: products,
+                    userId: this._id,
+                    date: new Date()
+                }
+                return db.collection('orders').insertOne(order)
             })
+    }
+
+    getOrders() {
+        const db = getDb();
+        return db.collection('orders').find({userId: new ObjectId(this._id)}).sort({date: -1}).toArray();
     }
 }
 
