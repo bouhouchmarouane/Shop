@@ -21,7 +21,7 @@ app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome
 app.use((req, res, next) => {
     User.findById("6089d3284fc753884fbf3822")
         .then(user => {            
-            req.user = user;
+            req.user = new User(user.name, user.email, user.cart, user._id);
             next();
         })
         .catch(error => console.log(error));
