@@ -37,13 +37,13 @@ exports.getProductDetails = (req, res) => {
 }
 
 exports.getCart = (req, res) => {
-    req.user.getCart()
-        .then(products => {
-            console.log(products);
+    req.user.populate('cart.productId').execPopulate()
+        .then(user => {
+            console.log(user.cart);
             res.render('shop/cart', {
                 pageTitle: 'Cart',
                 path: '/shop/cart',
-                products
+                items: user.cart
             });
         })
         .catch(error => console.log(error));
