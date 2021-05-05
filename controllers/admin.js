@@ -27,7 +27,6 @@ exports.postSaveProduct = (req, res) => {
     const price = req.body.price;
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
-    //const userId = req.user._id;
     if(id !== '') {
         return Product.findById(id)
             .then(product => {
@@ -41,7 +40,13 @@ exports.postSaveProduct = (req, res) => {
             });
     }
     else {
-        const product = new Product({title: title, price: price, imageUrl: imageUrl, description: description});
+        const product = new Product({
+            title: title, 
+            price: price, 
+            imageUrl: imageUrl, 
+            description: description,
+            userId: req.user
+        });
         product.save()
             .then(() => res.redirect('/admin/products-list'))
             .catch(error => console.log(error));
