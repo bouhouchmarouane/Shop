@@ -3,7 +3,7 @@
 <body>
     <%-include('../includes/navigation.ejs')%>
     <main>
-        <%if(products.length > 0) {%>
+        <%if(items.length > 0) {%>
             <div class="columns">
                 <div class="column is-half is-offset-one-quarter">
                     <div class="box">
@@ -19,25 +19,25 @@
                             </thead>
                             <tbody>
                                 <%let totalPrice = 0%>
-                                <% products.forEach((product) => { %>
+                                <% items.forEach((item) => { %>
                                     <tr>
-                                        <td><%=product.title%></td>
-                                        <td><%=product.price%></td>
-                                        <td><%=product.quantity%></td>
-                                        <th><%=product.quantity * product.price%> MAD</th>
+                                        <td><%=item.productId.title%></td>
+                                        <td><%=item.productId.price%></td>
+                                        <td><%=item.productId.quantity%></td>
+                                        <th><%=item.quantity * item.productId.price%> MAD</th>
                                         <td>
-                                            <button class="button is-danger is-outlined" style="float: right;" onclick="document.getElementById('deleteFromCart<%=product._id%>').submit()">
+                                            <button class="button is-danger is-outlined" style="float: right;" onclick="document.getElementById('deleteFromCart<%=item._id%>').submit()">
                                                 <span>Delete</span>
                                                 <span class="icon is-small">
                                                 <i class="fas fa-times"></i>
                                                 </span>
                                             </button>
-                                            <form id="deleteFromCart<%=product._id%>" action="/delete-from-cart" method="POST">
-                                                <input type="hidden" name="productId" value="<%=product._id%>">
+                                            <form id="deleteFromCart<%=item._id%>" action="/delete-from-cart" method="POST">
+                                                <input type="hidden" name="productId" value="<%=item.productId._id%>">
                                             </form>
                                         </td>
                                     </tr>
-                                    <%totalPrice += product.quantity * product.price %>
+                                    <%totalPrice += item.quantity * item.productId.price %>
                                 <%}) %>
                                 <tr>
                                     <th colspan="3">Total</th>

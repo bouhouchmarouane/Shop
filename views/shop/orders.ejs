@@ -32,12 +32,12 @@
                                     <%let totalPrice = 0%>
                                     <% order.items.forEach((item) => { %>
                                         <tr>
-                                            <td><%=item.title%></td>
-                                            <td><%=item.price%></td>
+                                            <td><%=item.product.title%></td>
+                                            <td><%=item.product.price%></td>
                                             <td><%=item.quantity%></td>
-                                            <th><%=item.quantity * item.price%> MAD</th>
+                                            <th><%=item.quantity * item.product.price%> MAD</th>
                                         </tr>
-                                        <%totalPrice += item.quantity * item.price %>
+                                        <%totalPrice += item.quantity * item.product.price %>
                                     <%}) %>
                                     <tr>
                                         <th colspan="3">Total</th>
@@ -50,7 +50,7 @@
                 </div>
             <%}) %>              
         <%} else {%>
-            2
+            0 Order
         <%} %>
     </main>
 </body>
