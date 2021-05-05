@@ -28,14 +28,14 @@ app.use('/css', express.static(path.join(__dirname, 'node_modules', '@fortawesom
 app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'js')));
 app.use(session({secret: 'my secret', resave: false, saveUninitialized: false, store: store}));
 
-app.use((req, res, next) => {
-    User.findById("6091e4db9b502018e8511d6b")
-        .then(user => {            
-            req.user = user;
-            next();
-        })
-        .catch(error => console.log(error));
-});
+// app.use((req, res, next) => {
+//     User.findById("6091e4db9b502018e8511d6b")
+//         .then(user => {            
+//             req.session.user = user;
+//             next();
+//         })
+//         .catch(error => console.log(error));
+// });
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);

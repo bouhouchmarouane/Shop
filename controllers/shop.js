@@ -1,5 +1,4 @@
 const Order = require('../models/order');
-const product = require('../models/product');
 const Product = require('../models/product');
 
 exports.getIndex = (req, res) => {
@@ -8,7 +7,8 @@ exports.getIndex = (req, res) => {
             res.render('shop/index', {
                 pageTitle: 'Shop',
                 path: '/shop/index',
-                products: products
+                products,
+                isLoggedIn: req.session.isLoggedIn
             });
         })
         .catch(error => console.log(error));
@@ -20,7 +20,8 @@ exports.getProductsList = (req, res) => {
             res.render('shop/products-list', {
                 pageTitle: 'Products',
                 path: '/shop/products-list',
-                products: products
+                products,
+                isLoggedIn: req.session.isLoggedIn
             });
         })
         .catch(error => console.log(error));
@@ -33,18 +34,21 @@ exports.getProductDetails = (req, res) => {
             res.render('shop/product-details', {
                 pageTitle: product.title,
                 path: '/shop/product-details',
-                product: product
+                product,
+                isLoggedIn: req.session.isLoggedIn
             });
         });
 }
 
 exports.getCart = (req, res) => {
-    req.user.populate('cart.productId').execPopulate()
+    console.log(req.session.user)
+    req.session.user.populate('cart.productId').execPopulate()
         .then(user => {
             res.render('shop/cart', {
                 pageTitle: 'Cart',
                 path: '/shop/cart',
-                items: user.cart
+                items: user.cart,
+                isLoggedIn: req.session.isLoggedIn
             });
         })
         .catch(error => console.log(error));
@@ -63,7 +67,8 @@ exports.PostCart = (req, res) => {
 exports.getCheckout = (req, res) => {
     res.render('shop/checkout', {
         pageTitle: 'Checkout',
-        path: '/shop/checkout'
+        path: '/shop/checkout',
+        isLoggedIn: req.session.isLoggedIn
     });
 }
 
@@ -73,7 +78,8 @@ exports.getOrders = (req, res) => {
             res.render('shop/orders', {
                 pageTitle: 'Orders',
                 path: '/shop/orders',
-                orders
+                orders,
+                isLoggedIn: req.session.isLoggedIn
             });
         })
         .catch(error => console.log(error));
