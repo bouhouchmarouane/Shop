@@ -92,9 +92,10 @@ exports.createOrder = (req, res) => {
             const products = user.cart.map(item => {
                 return {
                     quantity: item.quantity,
-                    productId: item.productId
+                    product: {...item.productId._doc}
                 }
             });
+            console.log(products)
             const order = new Order({
                 userId: user,
                 items: products,
