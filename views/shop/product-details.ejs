@@ -14,12 +14,12 @@
                         <div class="content"><%=product.description%></div>
                     </div>
                     <footer class="card-footer">
-                        <a href="javascript:document.getElementById('cartForm<%=product.id%>').submit()" class="card-footer-item">Add to cart</a>
+                        <a href="javascript:document.getElementById('cartForm<%=product._id%>').submit()" class="card-footer-item">Add to cart</a>
                     </footer>
                 </div>
             </div>
         </div>
     </main>
-    <%-include('../includes/add-to-cart-form.ejs', {productId: product.id})%>
+    <%-include('../includes/add-to-cart-form.ejs', {productId: product._id})%>
 </body>
 </html>

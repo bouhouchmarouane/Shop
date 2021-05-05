@@ -21,12 +21,12 @@
                             <div class="content">
                                 <div style="max-height: 70px; overflow: hidden;"><%=product.description%></div>
                                 ...
-                                <a href="/product-details/<%=product.id%>">See more</a>
+                                <a href="/product-details/<%=product._id%>">See more</a>
                             </div>
                         </div>
                         <footer class="card-footer">
-                            <a href="/admin/edit-product/<%=product.id%>" class="card-footer-item">Edit</a>
-                            <a href="javascript:if(confirm('Are you sure to delete this product ?'))document.getElementById('deleteProductForm<%=product.id%>').submit();" 
+                            <a href="/admin/edit-product/<%=product._id%>" class="card-footer-item">Edit</a>
+                            <a href="javascript:if(confirm('Are you sure to delete this product ?'))document.getElementById('deleteProductForm<%=product._id%>').submit();" 
                                 class="card-footer-item" style="background-color: tomato; color: white">Delete</a>
                         </footer>
                     </div>
@@ -34,8 +34,8 @@
                 <%if(index % 5 == 4) { %>
                     </div>
                 <%} %>
-                <form id="deleteProductForm<%=product.id%>" action="/admin/delete-product/" method="POST">
-                    <input type="hidden" name="productId" value="<%=product.id%>"/>
+                <form id="deleteProductForm<%=product._id%>" action="/admin/delete-product/" method="POST">
+                    <input type="hidden" name="productId" value="<%=product._id%>"/>
                 </form>
             <%}) %>
         <%} else {%>

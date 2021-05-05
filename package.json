@@ -9,6 +9,8 @@
     "bulma": "^0.9.2",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
+    "mongodb": "^3.6.6",
+    "mongoose": "^5.12.7",
     "mysql2": "^2.2.5",
     "sequelize": "^6.6.2"
   },
@@ -17,7 +19,8 @@
   },
   "scripts": {
     "test": "nodemon app.js",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "debug": "nodemon app.js"
   },
   "repository": {
     "type": "git",
