@@ -14,22 +14,22 @@
       
         <div id="navbarBasicExample" class="navbar-menu">
           <div class="navbar-start">
-            <a class="navbar-item" href="/">Home</a>
-            <a class="navbar-item" href="/products-list">Products</a>
-            <a class="navbar-item" href="/cart">Cart</a>
-            <a class="navbar-item" href="/orders">orders</a>
-            <a class="navbar-item" href="/checkout">Checkout</a>
+            <a class="navbar-item <%=path === '/shop/index' ? 'is-active' : ''%>" href="/">Home</a>
+            <a class="navbar-item <%=path === '/shop/products-list' || path === '/shop/product-details' ? 'is-active' : ''%>" href="/products-list">Products</a>
+            <a class="navbar-item <%=path === '/shop/cart' ? 'is-active' : ''%>" href="/cart">Cart</a>
+            <a class="navbar-item <%=path === '/shop/orders' ? 'is-active' : ''%>" href="/orders">orders</a>
+            <a class="navbar-item <%=path === '/shop/checkout' ? 'is-active' : ''%>" href="/checkout">Checkout</a>
           </div>
       
           <div class="navbar-end">
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">
+                <a class="navbar-link <%=path === '/admin/products-list' || path === '/admin/add-product' ? 'is-active' : ''%>">
                   Admin
                 </a>
         
                 <div class="navbar-dropdown">
-                  <a class="navbar-item" href="/admin/products-list">Products</a>
-                  <a class="navbar-item" href="/admin/add-product">Add product</a>
+                  <a class="navbar-item <%=path === '/admin/products-list' ? 'is-active' : ''%>" href="/admin/products-list">Products</a>
+                  <a class="navbar-item <%=path === '/admin/add-product' ? 'is-active' : ''%>" href="/admin/add-product">Add product</a>
                 </div>
               </div>
             <div class="navbar-item">
