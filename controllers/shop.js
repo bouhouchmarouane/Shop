@@ -95,7 +95,6 @@ exports.createOrder = (req, res) => {
                     product: {...item.productId._doc}
                 }
             });
-            console.log(products)
             const order = new Order({
                 userId: user,
                 items: products,
