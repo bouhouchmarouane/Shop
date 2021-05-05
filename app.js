@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
+const session = require('express-session');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -19,13 +20,14 @@ app.use(bodyParser.urlencoded());
 app.use('/css', express.static(path.join(__dirname, 'node_modules', 'bulma', 'css')));
 app.use('/css', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'js')));
+app.use(session({secret: 'my secret', resave: false, saveUninitialized: false}));
 
 app.use((req, res, next) => {
     User.findById("6091e4db9b502018e8511d6b")
         .then(user => {            
             req.user = user;
             next();
-        })
+        }) 
         .catch(error => console.log(error));
 });
 
