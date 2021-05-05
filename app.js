@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
+const authRoutes = require('./routes/auth');
 const errorsRoutes = require('./routes/errors');
 const User = require('./models/user');
 //const mongoConnect = require('./util/database').mongoConnect;
@@ -30,6 +31,7 @@ app.use((req, res, next) => {
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
+app.use('/auth', authRoutes);
 app.use(errorsRoutes);
 
 mongoose.connect('mongodb+srv://marouane:062178416@cluster0.jwqbp.mongodb.net/shop?retryWrites=true&w=majority')
