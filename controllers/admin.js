@@ -43,7 +43,7 @@ exports.postSaveProduct = (req, res) => {
 }
 
 exports.getProductsList = (req, res) => {
-    Product.fetchAll()
+    Product.find()
         .then(products => {
             res.render('admin/products-list', {
                 pageTitle: 'Products',
