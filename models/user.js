@@ -41,7 +41,6 @@ userSchema.methods.addToCart = function(product) {
 
 
 userSchema.methods.deleteFromCart = function(productId) {
-    console.log(productId);
     this.cart = this.cart.filter(item => !item.productId.equals(productId));
     return this.save();
 }
