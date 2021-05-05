@@ -68,7 +68,7 @@ exports.getCheckout = (req, res) => {
 }
 
 exports.getOrders = (req, res) => {
-    req.user.getOrders()
+    Order.find({"userId": req.user}).sort({ date: -1 })
         .then(orders => {
             res.render('shop/orders', {
                 pageTitle: 'Orders',
