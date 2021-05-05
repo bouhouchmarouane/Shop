@@ -19,19 +19,32 @@ app.use('/css', express.static(path.join(__dirname, 'node_modules', 'bulma', 'cs
 app.use('/css', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'js')));
 
-// app.use((req, res, next) => {
-//     User.findById("6089d3284fc753884fbf3822")
-//         .then(user => {            
-//             req.user = new User(user.name, user.email, user.cart, user._id);
-//             next();
-//         })
-//         .catch(error => console.log(error));
-// });
+app.use((req, res, next) => {
+    User.findById("6091e4db9b502018e8511d6b")
+        .then(user => {            
+            req.user = user;
+            next();
+        })
+        .catch(error => console.log(error));
+});
 
 app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use(errorsRoutes);
 
 mongoose.connect('mongodb+srv://marouane:062178416@cluster0.jwqbp.mongodb.net/shop?retryWrites=true&w=majority')
-    .then(app.listen(80))
+    .then(() => {
+        return User.findOne()
+            .then(user => {
+                if(!user) {
+                    const user = new User({
+                        name: 'Marouane',
+                        email: 'marouane@bouhouch.com',
+                        cart: []
+                    });
+                    return user.save();
+                }
+            })
+    })
+    .then(() => app.listen(80))
     .catch(error => console.log(error));
