@@ -29,10 +29,16 @@ exports.postSaveProduct = (req, res) => {
     const description = req.body.description;
     //const userId = req.user._id;
     if(id !== '') {
-        const editedProduct = new Product(title, price, imageUrl, description, id, userId);
-        return editedProduct.save()
-            .then(() => res.redirect('/admin/products-list'))
-            .catch(error => console.log(error));
+        return Product.findById(id)
+            .then(product => {
+                product.title = title;
+                product.price = price;
+                product.imageUrl = imageUrl;
+                product.description = description;
+                product.save()
+                    .then(() => res.redirect('/admin/products-list'))
+                    .catch(error => console.log(error));
+            });
     }
     else {
         const product = new Product({title: title, price: price, imageUrl: imageUrl, description: description});
