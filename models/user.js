@@ -1,20 +1,3 @@
-const mongoose = require('mongoose');
-
-const Schema = mongoose.Schema;
-
-const productSchema = new Schema({
-    title: {
-        type: String,
-        required: true
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    description: String,
-    imageUrl: String
-})
-
 // const mongodb = require('mongodb');
 
 // const getDb = require('../util/database').getDb;
