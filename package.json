@@ -19,7 +19,8 @@
   },
   "scripts": {
     "test": "nodemon app.js",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "debug": "nodemon app.js"
   },
   "repository": {
     "type": "git",
