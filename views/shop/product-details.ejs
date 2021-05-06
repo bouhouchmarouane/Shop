@@ -13,9 +13,11 @@
                         <p class="title is-3"><%=product.price%> MAD</p>
                         <div class="content"><%=product.description%></div>
                     </div>
-                    <footer class="card-footer">
-                        <a href="javascript:document.getElementById('cartForm<%=product._id%>').submit()" class="card-footer-item">Add to cart</a>
-                    </footer>
+                    <%if(isLoggedIn) {%>
+                        <footer class="card-footer">
+                            <a href="javascript:document.getElementById('cartForm<%=product._id%>').submit()" class="card-footer-item">Add to cart</a>
+                        </footer>
+                    <%} %>
                 </div>
             </div>
         </div>

@@ -16,33 +16,42 @@
           <div class="navbar-start">
             <a class="navbar-item <%=path === '/shop/index' ? 'is-active' : ''%>" href="/">Home</a>
             <a class="navbar-item <%=path === '/shop/products-list' || path === '/shop/product-details' ? 'is-active' : ''%>" href="/products-list">Products</a>
-            <a class="navbar-item <%=path === '/shop/cart' ? 'is-active' : ''%>" href="/cart">Cart</a>
-            <a class="navbar-item <%=path === '/shop/orders' ? 'is-active' : ''%>" href="/orders">orders</a>
-            <a class="navbar-item <%=path === '/shop/checkout' ? 'is-active' : ''%>" href="/checkout">Checkout</a>
+            <%if(isLoggedIn) {%>
+              <a class="navbar-item <%=path === '/shop/cart' ? 'is-active' : ''%>" href="/cart">Cart</a>
+              <a class="navbar-item <%=path === '/shop/orders' ? 'is-active' : ''%>" href="/orders">orders</a>
+            <%} %>
           </div>
-      
-          <div class="navbar-end">
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link <%=path === '/admin/products-list' || path === '/admin/add-product' ? 'is-active' : ''%>">
-                  Admin
-                </a>
-        
-                <div class="navbar-dropdown">
-                  <a class="navbar-item <%=path === '/admin/products-list' ? 'is-active' : ''%>" href="/admin/products-list">Products</a>
-                  <a class="navbar-item <%=path === '/admin/add-product' ? 'is-active' : ''%>" href="/admin/add-product">Add product</a>
+            <div class="navbar-end">
+              <%if(isLoggedIn) {%>
+                <div class="navbar-item has-dropdown is-hoverable">
+                  <a class="navbar-link <%=path === '/admin/products-list' || path === '/admin/add-product' ? 'is-active' : ''%>">
+                    Admin
+                  </a>
+                  <div class="navbar-dropdown">
+                    <a class="navbar-item <%=path === '/admin/products-list' ? 'is-active' : ''%>" href="/admin/products-list">Products</a>
+                    <a class="navbar-item <%=path === '/admin/add-product' ? 'is-active' : ''%>" href="/admin/add-product">Add product</a>
+                  </div>
                 </div>
-              </div>
-            <div class="navbar-item">
-              <div class="buttons">
-                <a class="button is-primary">
-                  <strong>Sign up</strong>
-                </a>
-                <a class="button is-light">
-                  Log in
-                </a>
-              </div>
+                <div class="navbar-item">
+                  <div class="buttons">
+                    <a class="button is-danger" href="/auth/logout">
+                      Logout
+                    </a>
+                  </div>
+                </div>
+              <%}else {%>
+                <div class="navbar-item">
+                  <div class="buttons">
+                    <a class="button is-primary">
+                      <strong>Sign up</strong>
+                    </a>
+                    <a class="button is-light" href="/auth/login">
+                      Log in
+                    </a>
+                  </div>
+                </div>
+              <%} %>
             </div>
-          </div>
         </div>
       </nav>
 </header>
