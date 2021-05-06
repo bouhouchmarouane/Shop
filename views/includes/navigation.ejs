@@ -16,8 +16,10 @@
           <div class="navbar-start">
             <a class="navbar-item <%=path === '/shop/index' ? 'is-active' : ''%>" href="/">Home</a>
             <a class="navbar-item <%=path === '/shop/products-list' || path === '/shop/product-details' ? 'is-active' : ''%>" href="/products-list">Products</a>
-            <a class="navbar-item <%=path === '/shop/cart' ? 'is-active' : ''%>" href="/cart">Cart</a>
-            <a class="navbar-item <%=path === '/shop/orders' ? 'is-active' : ''%>" href="/orders">orders</a>
+            <%if(isLoggedIn) {%>
+              <a class="navbar-item <%=path === '/shop/cart' ? 'is-active' : ''%>" href="/cart">Cart</a>
+              <a class="navbar-item <%=path === '/shop/orders' ? 'is-active' : ''%>" href="/orders">orders</a>
+            <%} %>
           </div>
             <div class="navbar-end">
               <%if(isLoggedIn) {%>
