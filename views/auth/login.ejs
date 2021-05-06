@@ -1,0 +1,43 @@
+<%-include('../includes/head.ejs')%>
+</head>
+    <body>
+        <%-include('../includes/navigation.ejs')%>
+        <main>
+            <form action="/auth/login" method="POST">
+                <div class="columns">
+                    <div class="column is-one-third is-offset-one-third">
+                        <div class="field">
+                            <label class="label">Title</label>
+                            <p class="control has-icons-left">
+                            <input class="input" type="email" name="email" >
+                            <span class="icon is-small is-left">
+                                <i class="far fa-envelope"></i>
+                            </span>
+                            </p>
+                        </div>             
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column is-one-third is-offset-one-third">
+                        <div class="field">
+                            <label class="label">Password</label>
+                            <p class="control has-icons-left">
+                            <input class="input" type="password" name="password" >
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-key"></i>
+                            </span>
+                            </p>
+                        </div>             
+                    </div>
+                </div> 
+                <div class="columns">
+                    <div class="column is-one-third is-offset-one-third">
+                        <div class="control">
+                            <button class="button is-link">Login</button>
+                        </div>         
+                    </div>
+                </div> 
+            </form>
+        </main>
+    </body>
+</html>

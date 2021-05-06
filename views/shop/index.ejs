@@ -1,24 +1,41 @@
 <%-include('../includes/head.ejs')%>
 </head>
-    <body>
-        <%-include('../includes/navigation.ejs')%>
-        <main>
-            <div class="columns">
-                <div class="column is-three-quarters">
-                    <img src="<%=product.imageUrl%>" alt="product.title"/>
-                </div>
-                <div class="column">
+<body>
+    <%-include('../includes/navigation.ejs')%>
+    <main>
+        <%if(products.length > 0) {%>
+            <% products.forEach((product, index) => { %>
+                <%if(index % 5 == 0) { %>
+                    <div class="columns">
+                <%} %>
+                <div class="column is-one-fifth">
                     <div class="card">
+                        <div class="card-image">
+                            <figure class="image is-4by3">
+                                <img src="<%=product.imageUrl%>" alt="<%=product.title%>">
+                            </figure>
+                        </div>
                         <div class="card-content">
+                            <p class="title is-4"><%=product.title%></p>
                             <p class="title is-3"><%=product.price%> MAD</p>
-                            <div class="content"><%=product.description%></div>
+                            <div class="content"><div style="max-height: 70px; overflow: hidden;"><%=product.description%></div>...<a href="/product-details/<%=product._id%>">See more</a></div>
                         </div>
                         <footer class="card-footer">
-                            <a href="#" class="card-footer-item">Add to cart</a>
+                            <%if(isLoggedIn) {%>
+                                <a href="javascript:document.getElementById('cartForm<%=product._id%>').submit()" class="card-footer-item">Add to cart</a>
+                            <%}%>
+                            <a href="/product-details/<%=product._id%>" class="card-footer-item">Details</a>
                         </footer>
                     </div>
                 </div>
-            </div>
-        </main>
-    </body>
+                <%if(index % 5 == 4) { %>
+                    </div>
+                <%} %>
+                <%-include('../includes/add-to-cart-form.ejs', {productId: product._id})%>
+            <%}) %>
+        <%} else {%>
+            <h2>No products found</h2>
+        <%}%>
+    </main>
+</body>
 </html>
