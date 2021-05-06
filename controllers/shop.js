@@ -41,8 +41,7 @@ exports.getProductDetails = (req, res) => {
 }
 
 exports.getCart = (req, res) => {
-    console.log(req.session.user)
-    req.session.user.populate('cart.productId').execPopulate()
+    req.user.populate('cart.productId').execPopulate()
         .then(user => {
             res.render('shop/cart', {
                 pageTitle: 'Cart',
