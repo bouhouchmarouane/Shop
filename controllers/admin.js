@@ -42,7 +42,6 @@ exports.postSaveProduct = (req, res) => {
             });
     }
     else {
-        console.log('req.session.user.id', req.session.user);
         const product = new Product({
             title: title, 
             price: price, 

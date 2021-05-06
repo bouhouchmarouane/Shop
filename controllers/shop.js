@@ -4,7 +4,7 @@ const Product = require('../models/product');
 exports.getIndex = (req, res) => {
     Product.find()
         .then(products => {
-            res.render('shop/index', {
+            res.render('shop/products-list', {
                 pageTitle: 'Shop',
                 path: '/shop/index',
                 products,
@@ -62,14 +62,6 @@ exports.PostCart = (req, res) => {
         })
         .then(() => res.redirect('/cart'))
         .catch(error => console.log(error));
-}
-
-exports.getCheckout = (req, res) => {
-    res.render('shop/checkout', {
-        pageTitle: 'Checkout',
-        path: '/shop/checkout',
-        isLoggedIn: req.session.isLoggedIn
-    });
 }
 
 exports.getOrders = (req, res) => {
