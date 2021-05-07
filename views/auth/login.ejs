@@ -4,11 +4,10 @@
         <%-include('../includes/navigation.ejs')%>
         <main>
             <form action="/auth/login" method="POST">
-                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                 <div class="columns">
                     <div class="column is-one-third is-offset-one-third">
                         <div class="field">
-                            <label class="label">Email</label>
+                            <label class="label">Title</label>
                             <p class="control has-icons-left">
                             <input class="input" type="email" name="email" >
                             <span class="icon is-small is-left">
