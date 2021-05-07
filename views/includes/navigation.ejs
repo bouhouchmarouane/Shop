@@ -34,9 +34,12 @@
                 </div>
                 <div class="navbar-item">
                   <div class="buttons">
-                    <a class="button is-danger" href="/auth/logout">
+                    <a class="button is-danger" href="javascript:document.getElementById('logoutForm').submit();">
                       Logout
                     </a>
+                    <form id="logoutForm" method="POST" action="/auth/logout">
+                      <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+                    </form>
                   </div>
                 </div>
               <%}else {%>

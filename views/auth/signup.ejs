@@ -4,6 +4,7 @@
         <%-include('../includes/navigation.ejs')%>
         <main>
             <form action="/auth/signup" method="POST">
+                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                 <div class="columns">
                     <div class="column is-one-third is-offset-one-third">
                         <div class="field">
