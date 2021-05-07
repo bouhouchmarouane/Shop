@@ -59,7 +59,6 @@ exports.PostSignup = (req, res) => {
                         password: hashedPassword,
                         cart: []
                     });
-                    console.log('1');
                     return newUser.save();
                 })
                 .then(() => res.redirect('/auth/login'));
