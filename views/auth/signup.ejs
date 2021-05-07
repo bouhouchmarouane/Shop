@@ -3,7 +3,20 @@
     <body>
         <%-include('../includes/navigation.ejs')%>
         <main>
-            <form action="/auth/login" method="POST">
+            <form action="/auth/signup" method="POST">
+                <div class="columns">
+                    <div class="column is-one-third is-offset-one-third">
+                        <div class="field">
+                            <label class="label">Name</label>
+                            <p class="control has-icons-left">
+                            <input class="input" type="name" name="name" >
+                            <span class="icon is-small is-left">
+                                <i class="fas fa-signature"></i>
+                            </span>
+                            </p>
+                        </div>             
+                    </div>
+                </div>
                 <div class="columns">
                     <div class="column is-one-third is-offset-one-third">
                         <div class="field">
@@ -29,11 +42,11 @@
                             </p>
                         </div>             
                     </div>
-                </div> 
+                </div>
                 <div class="columns">
                     <div class="column is-one-third is-offset-one-third">
                         <div class="control">
-                            <button class="button is-link">Login</button>
+                            <button class="button is-link">Signup</button>
                         </div>         
                     </div>
                 </div> 
