@@ -34,18 +34,15 @@
                 </div>
                 <div class="navbar-item">
                   <div class="buttons">
-                    <a class="button is-danger" href="javascript:document.getElementById('logoutForm').submit();">
+                    <a class="button is-danger" href="/auth/logout">
                       Logout
                     </a>
-                    <form id="logoutForm" method="POST" action="/auth/logout">
-                      <input type="hidden" name="_csrf" value="<%=csrfToken%>">
-                    </form>
                   </div>
                 </div>
               <%}else {%>
                 <div class="navbar-item">
                   <div class="buttons">
-                    <a class="button is-primary" href="/auth/signup">
+                    <a class="button is-primary">
                       <strong>Sign up</strong>
                     </a>
                     <a class="button is-light" href="/auth/login">
@@ -59,18 +56,3 @@
       </nav>
 </header>
 <h1 class="title is-1" style="margin: 10px;"><%=pageTitle%></h1>
-<%if(typeof errorMessage != 'undefined' && errorMessage.length > 0) {%>
-  <div class="columns">
-      <div class="column is-one-third is-offset-one-third">
-          <article class="message is-danger">
-              <div class="message-header">
-                  <p>Error</p>
-                  <button class="delete" aria-label="delete"></button>
-              </div>
-              <div class="message-body">
-                  <%=errorMessage %>
-              </div>
-          </article>
-      </div>
-  </div>
-<%}%>

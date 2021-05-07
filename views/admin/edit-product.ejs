@@ -4,7 +4,6 @@
         <%-include('../includes/navigation.ejs')%>
         <main>
             <form action="/admin/save-product" method="POST" class="product-form">
-                <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                 <input type="hidden" name="id" value="<%=product?._id%>">
                 <div class="columns">
                     <div class="column is-one-third is-offset-one-third">

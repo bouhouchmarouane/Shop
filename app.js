@@ -4,8 +4,6 @@ const path = require('path');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
-const csrf = require('csurf');
-const flash = require('connect-flash')
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -20,7 +18,6 @@ const store = new MongoDBStore({
     uri: MONGODB_URI,
     collection: 'sessions'
 });
-const csrfProtection = csrf();
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
@@ -29,9 +26,7 @@ app.use(bodyParser.urlencoded());
 app.use('/css', express.static(path.join(__dirname, 'node_modules', 'bulma', 'css')));
 app.use('/css', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'js')));
-app.use(session({secret: 'my secret', resave: false, saveUninitialized: false, store}));
-app.use(csrfProtection);
-app.use(flash());
+app.use(session({secret: 'my secret', resave: false, saveUninitialized: false, store: store}));
 
 app.use((req, res, next) => {
     if(!req.session.user) {
@@ -39,16 +34,11 @@ app.use((req, res, next) => {
     }
     User.findById(req.session.user._id)
             .then(user => {
+                console.log(user);
                 req.user = user;
                 next();
             })
             .catch(error => console.log(error));
-});
-
-app.use((req, res, next) => {
-    res.locals.isLoggedIn = req.session.isLoggedIn;
-    res.locals.csrfToken = req.csrfToken();
-    next();
 });
 
 app.use('/admin', adminRoutes);
