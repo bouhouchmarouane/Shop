@@ -22,7 +22,11 @@ exports.getLogin = (req, res) => {
     res.render('auth/login', {
         pageTitle: 'Login',
         path: '/auth/login',
-        errorMessages: req.flash('errorMessages')
+        errorMessages: req.flash('errorMessages'),
+        inputs: {
+            email: "",
+            password: ""
+        }
     });
 }
 
@@ -35,7 +39,11 @@ exports.postLogin = (req, res) => {
         return res.status(422).render('auth/login', {
             pageTitle: 'Login',
             path: '/auth/login',
-            errorMessages: errors
+            errorMessages: errors,
+            inputs: {
+                email,
+                password
+            }
         });
     }    
     User.findOne({email})
@@ -65,7 +73,12 @@ exports.getSignup = (req, res) => {
     res.render('auth/signup', {
         pageTitle: 'Sign up',
         path: '/auth/signup',
-        errorMessages: req.flash('errorMessages')
+        errorMessages: req.flash('errorMessages'),
+        inputs: {  
+            name: "",
+            email: "",
+            password: ""
+        }
     });
 }
 
@@ -79,7 +92,12 @@ exports.PostSignup = (req, res) => {
         return res.status(422).render('auth/signup', {
             pageTitle: 'Sign up',
             path: '/auth/signup',
-            errorMessages: errors
+            errorMessages: errors,
+            inputs: {  
+                name,
+                email,
+                password
+            }
         });
     }    
     sendEmail(email, 'Welcome aboard', '<h1>Welcome to Shop ' + name + '</h1>');
