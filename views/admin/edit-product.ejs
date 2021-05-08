@@ -11,7 +11,8 @@
                         <div class="field">
                             <label class="label">Title</label>
                             <p class="control has-icons-left">
-                            <input class="input" type="text" name="title" value="<%=product?.title%>">
+                            <input class="input <%=typeof validationErrors != 'undefined' && validationErrors.find(e => e.param === 'title') ? 'is-danger' : ''%>" 
+                                type="text" name="title" value="<%=product?.title%>">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-heading"></i>
                             </span>
@@ -24,7 +25,8 @@
                         <div class="field">
                             <label class="label">Price</label>
                             <p class="control has-icons-left">
-                            <input class="input" type="text" name="price" value="<%=product?.price%>">
+                            <input class="input <%=typeof validationErrors != 'undefined' && validationErrors.find(e => e.param === 'price') ? 'is-danger' : ''%>" 
+                                type="text" name="price" value="<%=typeof price != 'undefined' && price !== '' ? price : product?.price%>">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-dollar-sign"></i>
                             </span>
