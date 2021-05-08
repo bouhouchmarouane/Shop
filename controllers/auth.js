@@ -6,7 +6,7 @@ const crypto = require('crypto');
 
 const User = require('../models/user');
 
-var transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'marouanebhch@gmail.com',
@@ -29,6 +29,15 @@ exports.getLogin = (req, res) => {
 exports.postLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
+    let errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        errors = [...new Set(errors.array().map(error => error.msg))];
+        return res.status(422).render('auth/login', {
+            pageTitle: 'Login',
+            path: '/auth/login',
+            errorMessages: errors
+        });
+    }    
     User.findOne({email})
         .then(user => {
             if(!user) {
