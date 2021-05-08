@@ -72,26 +72,19 @@ exports.PostSignup = (req, res) => {
             path: '/auth/signup',
             errorMessages: errors
         });
-    }
-    User.findOne({email})
-        .then(user => {
-            if(user) {
-                req.flash('errorMessages', 'This email has been already used');
-                return res.redirect('/auth/signup');
-            }
-            sendEmail(email, 'Welcome aboard', '<h1>Welcome to Shop ' + name + '</h1>');
-            bcrypt.hash(password, 12)
-                .then(hashedPassword => {
-                    const newUser = new User({
-                        name,
-                        email,
-                        password: hashedPassword,
-                        cart: []
-                    });
-                    return newUser.save();
-                })
-                .then(() => res.redirect('/auth/login'));
+    }    
+    sendEmail(email, 'Welcome aboard', '<h1>Welcome to Shop ' + name + '</h1>');
+    bcrypt.hash(password, 12)
+        .then(hashedPassword => {
+            const newUser = new User({
+                name,
+                email,
+                password: hashedPassword,
+                cart: []
+            });
+            return newUser.save();
         })
+        .then(() => res.redirect('/auth/login'))
         .catch(error => console.log(error));
 }
 
