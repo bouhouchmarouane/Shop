@@ -1,6 +1,6 @@
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
-const {validationResult} = require('express-validator/check')
+const {validationResult} = require('express-validator/check');
 
 const crypto = require('crypto');
 
@@ -46,7 +46,7 @@ exports.postLogin = (req, res) => {
             },
             validationErrors: errors.array()
         });
-    }    
+    }
     User.findOne({email})
         .then(user => {
             if(!user) {
