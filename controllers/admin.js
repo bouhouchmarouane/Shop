@@ -54,7 +54,8 @@ exports.postSaveProduct = (req, res) => {
 }
 
 exports.getProductsList = (req, res) => {
-    Product.find()
+    console.log('id', req.user._id)
+    Product.find({userId: req.user._id})
         .then(products => {
             res.render('admin/products-list', {
                 pageTitle: 'Products',
