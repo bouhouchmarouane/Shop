@@ -66,7 +66,7 @@ exports.PostSignup = (req, res) => {
     const password = req.body.password;
     let errors = validationResult(req);
     if(!errors.isEmpty()) {
-        errors = errors.array().map(error => error.msg);
+        errors = [...new Set(errors.array().map(error => error.msg))];
         return res.status(422).render('auth/signup', {
             pageTitle: 'Sign up',
             path: '/auth/signup',
@@ -143,13 +143,13 @@ exports.getNewPassword = (req, res) => {
     User.findOne({resetToken: token, resetTokenExpiration: {$gt: Date.now()}})
         .then(user => {
             if(!user) {
-                req.flash('errorMessage', 'No account with that email address');
+                req.flash('errorMessages', 'No account with that email address');
                 return res.redirect('/auth/reset-password');
             }
             res.render('auth/new-password', {
                 pageTitle: 'New password',
                 path: '/auth/new-password',
-                errorMessage: req.flash('errorMessage'),
+                errorMessages: req.flash('errorMessages'),
                 userId: user._id.toString(),
                 resetToken: token
         })
