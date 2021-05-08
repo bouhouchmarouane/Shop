@@ -9,13 +9,13 @@ const authController = require('../controllers/auth')
 
 router.get('/login', authController.getLogin);
 router.post('/login', [
-    check('email').isEmail().withMessage('Please enter a valid email'),
-    check('password').isLength({min: 5}).withMessage('Please enter a valid password')
+    check('email').isEmail().withMessage('Please enter a valid email').normalizeEmail(),
+    check('password').isLength({min: 5}).withMessage('Please enter a valid password').trim()
 ], authController.postLogin);
 
 router.get('/signup', authController.getSignup);
 router.post('/signup', [
-    check('email').isEmail().withMessage('Please enter a valid email').custom((value, {req}) => {
+    check('email').isEmail().withMessage('Please enter a valid email').normalizeEmail().custom((value, {req}) => {
         return User.findOne({email: value})
         .then(user => {
             if(user) {
@@ -24,7 +24,7 @@ router.post('/signup', [
         })
     }), 
     body('name', 'Please enter a valid name').isAlpha().isLength({min: 1}),
-    check('password').isLength({min: 5}).withMessage('Please enter a valid password')
+    check('password').isLength({min: 5}).withMessage('Please enter a valid password').trim()
 ], authController.PostSignup);
 
 router.post('/logout', authController.postLogout);
