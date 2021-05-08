@@ -67,7 +67,7 @@ exports.PostSignup = (req, res) => {
                 req.flash('errorMessage', 'This email has been already used');
                 return res.redirect('/auth/signup');
             }
-            sendEmail(email, name);
+            sendEmail(email, 'Welcome aboard', '<h1>Welcome to Shop ' + name + '</h1>');
             bcrypt.hash(password, 12)
                 .then(hashedPassword => {
                     const newUser = new User({
@@ -89,12 +89,29 @@ exports.postLogout = (req, res) => {
     });
 }
 
-const sendEmail = (email, name) => {
+exports.getResetPassword = (req, res) => {
+    res.render('auth/reset-password', {
+        pageTitle: 'Reset password',
+        path: '/auth/reset-password',
+        errorMessage: req.flash('errorMessage')
+    });
+}
+
+exports.postResetPassword = (req, res) => {
+    res.render('auth/reset-password', {
+        pageTitle: 'Reset password',
+        path: '/auth/reset-password',
+        errorMessage: req.flash('errorMessage')
+    });
+}
+
+
+const sendEmail = (email, subject, htmlText) => {
     transporter.sendMail({
         from: 'marouanebhch@gmail.com',
         to: email,
-        subject: 'Welcome aboard',
-        html: '<h1>Welcome to Shop ' + name + '</h1>'
+        subject,
+        html: htmlText
     }, function(error, info){
         if (error) {
           console.log(error);
