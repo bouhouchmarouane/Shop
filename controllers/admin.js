@@ -24,7 +24,11 @@ exports.getEditProduct = (req, res) => {
                 product
             });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 exports.postSaveProduct = (req, res) => {
@@ -38,7 +42,6 @@ exports.postSaveProduct = (req, res) => {
         const productToUpdate = new Product({title, price, imageUrl, description, id: ''});
         const errorMessages = [...new Set(errors.array().map(error => error.msg))];
         if(id !== '') {
-            console.log("1", id);
             productToUpdate._id = id
             return res.status(422).render('admin/edit-product', {
                 pageTitle: 'Edit product',
@@ -50,11 +53,7 @@ exports.postSaveProduct = (req, res) => {
             });
         }
         else {
-            productToUpdate._id = '';
-            console.log("2", id);
-            console.log("2", productToUpdate._id);
             productToUpdate._id = null;
-            console.log('productToUpdate', productToUpdate);
             return res.status(422).render('admin/edit-product', {
                 pageTitle: 'Add product',
                 path: '/admin/add-product',
@@ -65,7 +64,6 @@ exports.postSaveProduct = (req, res) => {
             });
         }
     }
-    console.log('constinued');
     if(id !== '') {
         return Product.findById(id)
             .then(product => {
@@ -79,7 +77,11 @@ exports.postSaveProduct = (req, res) => {
                 product.description = description;
                 product.save()
                     .then(() => res.redirect('/admin/products-list'))
-                    .catch(error => console.log(error));
+                    .catch(error => {
+                        const err = new Error(error);
+                        err.httpStatusCode = 500;
+                        return next(err);
+                    });
             });
     }
     else {
@@ -92,7 +94,11 @@ exports.postSaveProduct = (req, res) => {
         });
         product.save()
             .then(() => res.redirect('/admin/products-list'))
-            .catch(error => console.log(error));
+            .catch(error => {
+                const err = new Error(error);
+                err.httpStatusCode = 500;
+                return next(err);
+            });
     }
 }
 
@@ -106,13 +112,21 @@ exports.getProductsList = (req, res) => {
                 messageError: req.flash('errorMessages')
             });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 exports.deleteProduct = (req, res) => {
     const productId = req.body.productId;
     Product.deleteOne({_id: productId, userId: req.user._id})
         .then(() => res.redirect('/admin/products-list'))
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 

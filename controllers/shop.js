@@ -10,7 +10,11 @@ exports.getIndex = (req, res) => {
                 products
             });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 exports.getProductsList = (req, res) => {
@@ -22,7 +26,11 @@ exports.getProductsList = (req, res) => {
                 products
             });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 exports.getProductDetails = (req, res) => {
@@ -46,7 +54,11 @@ exports.getCart = (req, res) => {
                 items: user.cart
             });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 exports.PostCart = (req, res) => {
@@ -56,7 +68,11 @@ exports.PostCart = (req, res) => {
             return req.user.addToCart(product);
         })
         .then(() => res.redirect('/cart'))
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 exports.getOrders = (req, res) => {
@@ -75,7 +91,11 @@ exports.deleteFromCart = (req, res) => {
     const productId = req.body.productId;
     req.user.deleteFromCart(productId)
         .then(() => res.redirect('/cart'))
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 exports.createOrder = (req, res) => {
@@ -96,5 +116,9 @@ exports.createOrder = (req, res) => {
         })
         .then(() => req.user.clearCart())
         .then(() => res.redirect('/orders'))
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
