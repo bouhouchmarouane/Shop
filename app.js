@@ -58,6 +58,11 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use('/auth', authRoutes);
 app.use(errorsRoutes);
+app.use((error, req, res, next) => {
+    const errorMessages = []
+    errorMessages.push(error.toString())
+    res.render('errors/500', {pageTitle: '500 - Error occured', path:'', errorMessages});
+});
 
 mongoose.connect(MONGODB_URI)
     .then(() => app.listen(80))

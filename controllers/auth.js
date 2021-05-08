@@ -67,7 +67,11 @@ exports.postLogin = (req, res) => {
                     res.redirect('/auth/login');
                 })
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 exports.getSignup = (req, res) => {
@@ -114,7 +118,11 @@ exports.PostSignup = (req, res) => {
             return newUser.save();
         })
         .then(() => res.redirect('/auth/login'))
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 exports.postLogout = (req, res) => {
@@ -156,7 +164,11 @@ exports.postResetPassword = (req, res) => {
                     <b>Click <a href="http://localhost:80/auth/reset-password/${token}">this link</a> to set a new password</b>
                 `)
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+                const err = new Error(error);
+                err.httpStatusCode = 500;
+                return next(err);
+            });
     })
 }
 
@@ -175,7 +187,11 @@ exports.getNewPassword = (req, res) => {
                 userId: user._id.toString(),
                 resetToken: token
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
     });
 }
 
@@ -200,7 +216,11 @@ exports.postNewPassword = (req, res) => {
             return resetUser.save();
         })
         .then(() => res.redirect('/auth/login'))
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 const sendEmail = (email, subject, htmlText) => {
