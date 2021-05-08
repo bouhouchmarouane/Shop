@@ -1,8 +1,10 @@
+const {validationResult} = require('express-validator/check');
+
 const Product = require('../models/product');
 
 exports.getAddProduct = (req, res) => {
     res.render('admin/edit-product', {
-        pageTitle: 'Add Product',
+        pageTitle: 'Add product',
         path: '/admin/add-product',
         product: null
     });
@@ -17,7 +19,7 @@ exports.getEditProduct = (req, res) => {
                 return res.redirect('/admin/products-list');
             }
             res.render('admin/edit-product', {
-                pageTitle: 'Edit Product',
+                pageTitle: 'Edit product',
                 path: '/admin/edit-product',
                 product
             });
@@ -31,6 +33,39 @@ exports.postSaveProduct = (req, res) => {
     const price = req.body.price;
     const imageUrl = req.body.imageUrl;
     const description = req.body.description;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        const productToUpdate = new Product({title, price, imageUrl, description, id: ''});
+        const errorMessages = [...new Set(errors.array().map(error => error.msg))];
+        if(id !== '') {
+            console.log("1", id);
+            productToUpdate._id = id
+            return res.status(422).render('admin/edit-product', {
+                pageTitle: 'Edit product',
+                path: '/admin/edit-product',
+                product: productToUpdate,
+                errorMessages,
+                price,
+                validationErrors: errors.array()
+            });
+        }
+        else {
+            productToUpdate._id = '';
+            console.log("2", id);
+            console.log("2", productToUpdate._id);
+            productToUpdate._id = null;
+            console.log('productToUpdate', productToUpdate);
+            return res.status(422).render('admin/edit-product', {
+                pageTitle: 'Add product',
+                path: '/admin/add-product',
+                errorMessages,
+                product: productToUpdate,
+                price,
+                validationErrors: errors.array()
+            });
+        }
+    }
+    console.log('constinued');
     if(id !== '') {
         return Product.findById(id)
             .then(product => {
