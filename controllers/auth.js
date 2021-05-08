@@ -1,5 +1,7 @@
 const bcrypt = require('bcryptjs');
-var nodemailer = require('nodemailer');
+const nodemailer = require('nodemailer');
+
+const crypto = require('crypto');
 
 const User = require('../models/user');
 
@@ -98,13 +100,34 @@ exports.getResetPassword = (req, res) => {
 }
 
 exports.postResetPassword = (req, res) => {
-    res.render('auth/reset-password', {
-        pageTitle: 'Reset password',
-        path: '/auth/reset-password',
-        errorMessage: req.flash('errorMessage')
-    });
+    crypto.randomBytes(32, (error, buffer) => {
+        if(error) {
+            console.log(error);
+            req.flash('errorMessage', 'An error has occured');
+            return res.redirect('/auth/reset-password');
+        }
+        const token = buffer.toString('hex');
+        console.log(token);
+        User.findOne({email: req.body.email})
+            .then(user => {
+                if(!user) {
+                    req.flash('errorMessage', 'No account with that email address');
+                    return res.redirect('/auth/reset-password');
+                }
+                user.resetToken = token;
+                user.resetTokenExpiration = Date.now() + 60 * 60 * 1000;
+                user.save();
+            })
+            .then(() => {
+                res.redirect('/');
+                sendEmail(req.body.email, "Password reset", `
+                    <h1>Password reset</h1>
+                    <b>Click <a href="http://localhost:80/reset-password/${token}">this link</a> to set a new password</b>
+                `)
+            })
+            .catch()
+    })
 }
-
 
 const sendEmail = (email, subject, htmlText) => {
     transporter.sendMail({
