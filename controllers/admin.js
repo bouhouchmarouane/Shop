@@ -86,7 +86,6 @@ exports.postSaveProduct = (req, res) => {
     }
     else {
         const product = new Product({
-            _id: new ObjectId('6096726cc4a43b26c8c4f167'),
             title: title, 
             price: price, 
             imageUrl: imageUrl, 
