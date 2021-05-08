@@ -10,8 +10,12 @@ exports.getAddProduct = (req, res) => {
 
 exports.getEditProduct = (req, res) => {
     const productId = req.params.productId;
-    Product.findById(productId)
+    Product.findOne({_id: productId, userId: req.user._id})
         .then(product => {
+            if(!product) {
+                req.flash('errorMessage', 'Invalid userId');
+                return res.redirect('/admin/products-list');
+            }
             res.render('admin/edit-product', {
                 pageTitle: 'Edit Product',
                 path: '/admin/edit-product',
@@ -30,6 +34,10 @@ exports.postSaveProduct = (req, res) => {
     if(id !== '') {
         return Product.findById(id)
             .then(product => {
+                if(!product.userId.equals(req.user._id)) {
+                    req.flash('errorMessage', 'Invalid userId');
+                    return res.redirect('/admin/products-list');
+                }
                 product.title = title;
                 product.price = price;
                 product.imageUrl = imageUrl;
@@ -54,13 +62,13 @@ exports.postSaveProduct = (req, res) => {
 }
 
 exports.getProductsList = (req, res) => {
-    console.log('id', req.user._id)
     Product.find({userId: req.user._id})
         .then(products => {
             res.render('admin/products-list', {
                 pageTitle: 'Products',
                 path: '/admin/products-list',
-                products
+                products,
+                messageError: req.flash('errorMessage')
             });
         })
         .catch(error => console.log(error));
@@ -68,7 +76,7 @@ exports.getProductsList = (req, res) => {
 
 exports.deleteProduct = (req, res) => {
     const productId = req.body.productId;
-    Product.findByIdAndRemove(productId)
+    Product.deleteOne({_id: productId, userId: req.user._id})
         .then(() => res.redirect('/admin/products-list'))
         .catch(error => console.log(error));
 }
