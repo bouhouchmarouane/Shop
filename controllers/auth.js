@@ -66,7 +66,7 @@ exports.PostSignup = (req, res) => {
     const password = req.body.password;
     let errors = validationResult(req);
     if(!errors.isEmpty()) {
-        errors = errors.array().map(error => error.msg + ' for ' + error.param);
+        errors = errors.array().map(error => error.msg);
         return res.status(422).render('auth/signup', {
             pageTitle: 'Sign up',
             path: '/auth/signup',

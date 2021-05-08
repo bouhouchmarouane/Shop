@@ -8,7 +8,7 @@ const authController = require('../controllers/auth')
 router.get('/login', authController.getLogin);
 router.post('/login', authController.postLogin);
 router.get('/signup', authController.getSignup);
-router.post('/signup', check('email').isEmail(), authController.PostSignup);
+router.post('/signup', check('email').isEmail().withMessage('Please enter a valid email'), authController.PostSignup);
 router.post('/logout', authController.postLogout);
 router.get('/reset-password', authController.getResetPassword);
 router.post('/reset-password', authController.postResetPassword);
