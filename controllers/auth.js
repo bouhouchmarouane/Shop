@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const {validationResult} = require('express-validator/check')
 
 const crypto = require('crypto');
 
@@ -63,6 +64,15 @@ exports.PostSignup = (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
+    let errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        errors = errors.array().map(error => error.msg + ' for ' + error.param);
+        return res.status(422).render('auth/signup', {
+            pageTitle: 'Sign up',
+            path: '/auth/signup',
+            errorMessage: errors
+        });
+    }
     User.findOne({email})
         .then(user => {
             if(user) {
