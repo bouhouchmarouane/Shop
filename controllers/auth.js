@@ -1,8 +1,21 @@
 const bcrypt = require('bcryptjs');
+var nodemailer = require('nodemailer');
 
 const User = require('../models/user');
 
-exports.getLogin = (req, res) => {
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'marouanebhch@gmail.com',
+        pass: '062178416++'
+    },
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false,
+    requireTLS: true,
+});
+
+exports.getLogin = (req, res) => {  
     res.render('auth/login', {
         pageTitle: 'Login',
         path: '/auth/login',
@@ -54,6 +67,7 @@ exports.PostSignup = (req, res) => {
                 req.flash('errorMessage', 'This email has been already used');
                 return res.redirect('/auth/signup');
             }
+            sendEmail(email, name);
             bcrypt.hash(password, 12)
                 .then(hashedPassword => {
                     const newUser = new User({
@@ -72,5 +86,20 @@ exports.PostSignup = (req, res) => {
 exports.postLogout = (req, res) => {
     req.session.destroy(() => {
         res.redirect('/');
+    });
+}
+
+const sendEmail = (email, name) => {
+    transporter.sendMail({
+        from: 'marouanebhch@gmail.com',
+        to: email,
+        subject: 'Welcome aboard',
+        html: '<h1>Welcome to Shop ' + name + '</h1>'
+    }, function(error, info){
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email sent: ' + info.response);
+        }
     });
 }
