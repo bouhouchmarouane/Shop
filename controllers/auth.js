@@ -107,7 +107,6 @@ exports.postResetPassword = (req, res) => {
             return res.redirect('/auth/reset-password');
         }
         const token = buffer.toString('hex');
-        console.log(token);
         User.findOne({email: req.body.email})
             .then(user => {
                 if(!user) {
@@ -125,8 +124,26 @@ exports.postResetPassword = (req, res) => {
                     <b>Click <a href="http://localhost:80/reset-password/${token}">this link</a> to set a new password</b>
                 `)
             })
-            .catch()
+            .catch(error => console.log(error));
     })
+}
+
+exports.getNewPassword = (req, res) => {
+    const token = req.param.token;
+    User.findOne({resetToken: token, resetTokenExpiration: {$gt: Date.now()}})
+        .then(user => {
+            if(!user) {
+                req.flash('errorMessage', 'No account with that email address');
+                return res.redirect('/auth/new-password');
+            }
+            res.render('auth/new-password', {
+                pageTitle: 'New password',
+                path: '/auth/new-password',
+                errorMessage: req.flash('errorMessage'),
+                userId: user._id.toString()
+        })
+        .catch(error => console.log(error));
+    });
 }
 
 const sendEmail = (email, subject, htmlText) => {
