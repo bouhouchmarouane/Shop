@@ -10,7 +10,7 @@
                         <div class="field">
                             <label class="label">Name</label>
                             <p class="control has-icons-left">
-                            <input class="input" type="name" name="name" value="<%=inputs.name%>">
+                            <input class="input <%=typeof validationErrors != 'undefined' && validationErrors.find(e => e.param === 'name') ? 'is-danger' : ''%>" type="name" name="name" value="<%=inputs.name%>">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-signature"></i>
                             </span>
@@ -23,7 +23,7 @@
                         <div class="field">
                             <label class="label">Email</label>
                             <p class="control has-icons-left">
-                            <input class="input" type="email" name="email" value="<%=inputs.email%>">
+                            <input class="input <%=typeof validationErrors != 'undefined' && validationErrors.find(e => e.param === 'email') ? 'is-danger' : ''%>" type="email" name="email" value="<%=inputs.email%>">
                             <span class="icon is-small is-left">
                                 <i class="far fa-envelope"></i>
                             </span>
@@ -36,7 +36,7 @@
                         <div class="field">
                             <label class="label">Password</label>
                             <p class="control has-icons-left">
-                            <input class="input" type="password" name="password" value="<%=inputs.password%>">
+                            <input class="input <%=typeof validationErrors != 'undefined' && validationErrors.find(e => e.param === 'password') ? 'is-danger' : ''%>" type="password" name="password" value="<%=inputs.password%>">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-key"></i>
                             </span>

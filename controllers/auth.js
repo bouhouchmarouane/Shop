@@ -33,17 +33,18 @@ exports.getLogin = (req, res) => {
 exports.postLogin = (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
-    let errors = validationResult(req);
+    const errors = validationResult(req);
     if(!errors.isEmpty()) {
-        errors = [...new Set(errors.array().map(error => error.msg))];
+        const errorMessages = [...new Set(errors.array().map(error => error.msg))];
         return res.status(422).render('auth/login', {
             pageTitle: 'Login',
             path: '/auth/login',
-            errorMessages: errors,
+            errorMessages,
             inputs: {
                 email,
                 password
-            }
+            },
+            validationErrors: errors.array()
         });
     }    
     User.findOne({email})
@@ -86,9 +87,9 @@ exports.PostSignup = (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-    let errors = validationResult(req);
+    const errors = validationResult(req);
     if(!errors.isEmpty()) {
-        errors = [...new Set(errors.array().map(error => error.msg))];
+        const errorMessages = [...new Set(errors.array().map(error => error.msg))];
         return res.status(422).render('auth/signup', {
             pageTitle: 'Sign up',
             path: '/auth/signup',
@@ -97,7 +98,8 @@ exports.PostSignup = (req, res) => {
                 name,
                 email,
                 password
-            }
+            },
+            validationErrors: errors.array()
         });
     }    
     sendEmail(email, 'Welcome aboard', '<h1>Welcome to Shop ' + name + '</h1>');
