@@ -13,7 +13,7 @@ exports.getEditProduct = (req, res) => {
     Product.findOne({_id: productId, userId: req.user._id})
         .then(product => {
             if(!product) {
-                req.flash('errorMessage', 'Invalid userId');
+                req.flash('errorMessages', 'Invalid userId');
                 return res.redirect('/admin/products-list');
             }
             res.render('admin/edit-product', {
@@ -35,7 +35,7 @@ exports.postSaveProduct = (req, res) => {
         return Product.findById(id)
             .then(product => {
                 if(!product.userId.equals(req.user._id)) {
-                    req.flash('errorMessage', 'Invalid userId');
+                    req.flash('errorMessages', 'Invalid userId');
                     return res.redirect('/admin/products-list');
                 }
                 product.title = title;
@@ -68,7 +68,7 @@ exports.getProductsList = (req, res) => {
                 pageTitle: 'Products',
                 path: '/admin/products-list',
                 products,
-                messageError: req.flash('errorMessage')
+                messageError: req.flash('errorMessages')
             });
         })
         .catch(error => console.log(error));

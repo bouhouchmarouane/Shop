@@ -59,7 +59,7 @@
       </nav>
 </header>
 <h1 class="title is-1" style="margin: 10px;"><%=pageTitle%></h1>
-<%if(typeof errorMessage != 'undefined' && errorMessage.length > 0) {%>
+<%if(typeof errorMessages != 'undefined' && errorMessages.length > 0) {%>
   <div class="columns">
       <div class="column is-one-third is-offset-one-third">
           <article class="message is-danger">
@@ -68,7 +68,9 @@
                   <button class="delete" aria-label="delete"></button>
               </div>
               <div class="message-body">
-                  <%=errorMessage %>
+                <% errorMessages.forEach((errorMessage) => { %>
+                  <%=errorMessage %><br/>
+                <%}) %>
               </div>
           </article>
       </div>

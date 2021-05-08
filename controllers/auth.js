@@ -22,7 +22,7 @@ exports.getLogin = (req, res) => {
     res.render('auth/login', {
         pageTitle: 'Login',
         path: '/auth/login',
-        errorMessage: req.flash('errorMessage')
+        errorMessages: req.flash('errorMessages')
     });
 }
 
@@ -32,7 +32,7 @@ exports.postLogin = (req, res) => {
     User.findOne({email})
         .then(user => {
             if(!user) {
-                req.flash('errorMessage', 'Invalid email or password');
+                req.flash('errorMessages', 'Invalid email or password');
                 return res.redirect('/auth/login');
             }
             bcrypt.compare(password, user.password)
@@ -45,7 +45,7 @@ exports.postLogin = (req, res) => {
                             res.redirect('/');
                         });
                     }
-                    req.flash('errorMessage', 'Invalid email or password');
+                    req.flash('errorMessages', 'Invalid email or password');
                     res.redirect('/auth/login');
                 })
         })
@@ -56,7 +56,7 @@ exports.getSignup = (req, res) => {
     res.render('auth/signup', {
         pageTitle: 'Sign up',
         path: '/auth/signup',
-        errorMessage: req.flash('errorMessage')
+        errorMessages: req.flash('errorMessages')
     });
 }
 
@@ -70,13 +70,13 @@ exports.PostSignup = (req, res) => {
         return res.status(422).render('auth/signup', {
             pageTitle: 'Sign up',
             path: '/auth/signup',
-            errorMessage: errors
+            errorMessages: errors
         });
     }
     User.findOne({email})
         .then(user => {
             if(user) {
-                req.flash('errorMessage', 'This email has been already used');
+                req.flash('errorMessages', 'This email has been already used');
                 return res.redirect('/auth/signup');
             }
             sendEmail(email, 'Welcome aboard', '<h1>Welcome to Shop ' + name + '</h1>');
@@ -105,7 +105,7 @@ exports.getResetPassword = (req, res) => {
     res.render('auth/reset-password', {
         pageTitle: 'Reset password',
         path: '/auth/reset-password',
-        errorMessage: req.flash('errorMessage')
+        errorMessages: req.flash('errorMessages')
     });
 }
 
@@ -113,14 +113,14 @@ exports.postResetPassword = (req, res) => {
     crypto.randomBytes(32, (error, buffer) => {
         if(error) {
             console.log(error);
-            req.flash('errorMessage', 'An error has occured');
+            req.flash('errorMessages', 'An error has occured');
             return res.redirect('/auth/reset-password');
         }
         const token = buffer.toString('hex');
         User.findOne({email: req.body.email})
             .then(user => {
                 if(!user) {
-                    req.flash('errorMessage', 'No account with that email address');
+                    req.flash('errorMessages', 'No account with that email address');
                     return res.redirect('/auth/reset-password');
                 }
                 user.resetToken = token;
