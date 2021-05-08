@@ -57,18 +57,5 @@ app.use('/auth', authRoutes);
 app.use(errorsRoutes);
 
 mongoose.connect(MONGODB_URI)
-    .then(() => {
-        return User.findOne()
-            .then(user => {
-                if(!user) {
-                    const user = new User({
-                        name: 'Marouane',
-                        email: 'marouane@bouhouch.com',
-                        cart: []
-                    });
-                    return user.save();
-                }
-            })
-    })
     .then(() => app.listen(80))
     .catch(error => console.log(error));
