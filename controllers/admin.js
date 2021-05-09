@@ -105,7 +105,7 @@ exports.getProductsList = (req, res, next) => {
         .catch(error => next(error));
 }
 
-exports.deleteProduct = (req, res) => {
+exports.deleteProduct = (req, res, next) => {
     const productId = req.body.productId;
     Product.deleteOne({_id: productId, userId: req.user._id})
         .then(() => res.redirect('/admin/products-list'))
