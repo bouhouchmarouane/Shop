@@ -39,6 +39,7 @@ app.set('views', 'views');
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(multer({dest: 'images', fileFilter}).single('image'));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/css', express.static(path.join(__dirname, 'node_modules', 'bulma', 'css')));
 app.use('/css', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'js')));
@@ -48,8 +49,6 @@ app.use(flash());
 
 
 app.use((req, res, next) => {
-    console.log(req.path)
-    console.log("LOGGGGG", req.session.isLoggedIn);
     res.locals.isLoggedIn = req.session.isLoggedIn;
     res.locals.csrfToken = req.csrfToken();
     next();
@@ -74,10 +73,9 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use('/auth', authRoutes);
 app.use((error, req, res, next) => {
-    console.log('test');
     const errorMessages = []
     errorMessages.push(error.toString())
-    res.render('errors/500', {
+    res.status(500).render('errors/500', {
         pageTitle: '500 - Error occured',
         path:'', 
         errorMessages

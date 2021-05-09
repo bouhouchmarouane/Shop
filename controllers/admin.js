@@ -32,14 +32,11 @@ exports.getEditProduct = (req, res) => {
 }
 
 exports.postSaveProduct = (req, res) => {
-    console.log('1111111111111');
     const id = req.body.id;
     const title = req.body.title;
     const price = req.body.price;
     const image = req.file;
-    console.log(req.image)
-    const imageUrl = image.path;
-    console.log('imageUrl', imageUrl);
+    const imageUrl = "/" + image.path;
     const description = req.body.description;
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -90,7 +87,6 @@ exports.postSaveProduct = (req, res) => {
             });
     }
     else {
-        console.log('HERE20');
         const product = new Product({
             title: title, 
             price: price, 
@@ -101,7 +97,6 @@ exports.postSaveProduct = (req, res) => {
         product.save()
             .then(() => res.redirect('/admin/products-list'))
             .catch(error => {
-                console.log("ERROR");
                 const err = new Error(error);
                 err.httpStatusCode = 500;
                 return next(err);
