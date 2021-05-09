@@ -111,12 +111,16 @@ exports.getInvoice = (req, res, next) => {
             }
             const invoiceFileName = 'invoice-' + orderId + '.pdf';
             const invoicePath = path.join('data', 'invoices', invoiceFileName);
-            fs.readFile(invoicePath, (error, data) => {
-                if(error) return next(error);
-                res.setHeader('Content-type', 'application/pdf');
-                res.setHeader('Content-disposition', 'attachement; filename="' + invoiceFileName + '"');
-                res.send(data);
-            })
+            // fs.readFile(invoicePath, (error, data) => {
+            //     if(error) return next(error);
+            //     res.setHeader('Content-type', 'application/pdf');
+            //     res.setHeader('Content-disposition', 'attachement; filename="' + invoiceFileName + '"');
+            //     res.send(data);
+            // });
+            const file = fs.createReadStream(invoicePath);
+            res.setHeader('Content-type', 'application/pdf');
+            res.setHeader('Content-disposition', 'attachement; filename="' + invoiceFileName + '"');
+            file.pipe(res);
         })
         .catch(error => next(error));
 }
