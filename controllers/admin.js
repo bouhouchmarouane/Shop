@@ -35,7 +35,7 @@ exports.postSaveProduct = (req, res) => {
     const id = req.body.id;
     const title = req.body.title;
     const price = req.body.price;
-    const imageUrl = req.body.imageUrl;
+    const imageUrl = req.file;
     const description = req.body.description;
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -86,6 +86,7 @@ exports.postSaveProduct = (req, res) => {
     }
     else {
         const product = new Product({
+            _id: new ObjectId('6096726cc4a43b26c8c4f167'),
             title: title, 
             price: price, 
             imageUrl: imageUrl, 
@@ -95,6 +96,7 @@ exports.postSaveProduct = (req, res) => {
         product.save()
             .then(() => res.redirect('/admin/products-list'))
             .catch(error => {
+                console.log("ERROR");
                 const err = new Error(error);
                 err.httpStatusCode = 500;
                 return next(err);

@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
-const flash = require('connect-flash')
+const flash = require('connect-flash');
+const multer = require('multer');
 
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
@@ -21,11 +22,23 @@ const store = new MongoDBStore({
     collection: 'sessions'
 });
 const csrfProtection = csrf();
+const fileStorage = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, 'image');
+    },
+    filename: (req, file, callback) => {
+        callback(null, new Date().toISOString() + "-" + file.originalname);
+    }
+});
+const fileFilter = (req, file, callback) => {
+    callback(null, file.mimetype === 'image/png' || file.mimetype === 'image/jpg' || file.mimetype === 'image/jpeg')
+}
 
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use(bodyParser.urlencoded());
+app.use(multer({storage: fileStorage}).single('image'));
 app.use('/css', express.static(path.join(__dirname, 'node_modules', 'bulma', 'css')));
 app.use('/css', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules', '@fortawesome', 'fontawesome-free', 'js')));
@@ -49,6 +62,7 @@ app.use((req, res, next) => {
 });
 
 app.use((req, res, next) => {
+    console.log("LOGGGGG", req.session.isLoggedIn);
     res.locals.isLoggedIn = req.session.isLoggedIn;
     res.locals.csrfToken = req.csrfToken();
     next();
@@ -61,7 +75,7 @@ app.use(errorsRoutes);
 app.use((error, req, res, next) => {
     const errorMessages = []
     errorMessages.push(error.toString())
-    res.render('errors/500', {pageTitle: '500 - Error occured', path:'', errorMessages});
+    res.status(500).render('errors/500', {pageTitle: '500 - Error occured', path:'', errorMessages});
 });
 
 mongoose.connect(MONGODB_URI)

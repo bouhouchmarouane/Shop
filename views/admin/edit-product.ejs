@@ -3,7 +3,7 @@
     <body>
         <%-include('../includes/navigation.ejs')%>
         <main>
-            <form action="/admin/save-product" method="POST" class="product-form">
+            <form action="/admin/save-product" method="POST" class="product-form" enctype="multipart/form-data">
                 <input type="hidden" name="_csrf" value="<%=csrfToken%>">
                 <input type="hidden" name="id" value="<%=product?._id%>">
                 <div class="columns">
@@ -46,7 +46,7 @@
                             </p> -->
                             <div class="file is-normal has-name" id="imageUploadContainer">
                                 <label class="file-label" style="width: 100%;">
-                                    <input class="file-input" type="file" name="image">
+                                    <input class="file-input" type="file" name="image" accept="image/x-png,image/jpeg">
                                     <span class="file-cta">
                                         <span class="file-icon">
                                             <i class="fas fa-upload"></i>
