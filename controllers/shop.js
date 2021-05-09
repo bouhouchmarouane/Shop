@@ -84,7 +84,11 @@ exports.getOrders = (req, res) => {
                 orders
             });
         })
-        .catch(error => console.log(error));
+        .catch(error => {
+            const err = new Error(error);
+            err.httpStatusCode = 500;
+            return next(err);
+        });
 }
 
 exports.deleteFromCart = (req, res) => {
