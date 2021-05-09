@@ -37,13 +37,34 @@
                 <div class="columns">
                     <div class="column is-one-third is-offset-one-third">
                         <div class="field">
-                            <label class="label">Image URL</label>
+                            <!-- <label class="label">Image URL</label>
                             <p class="control has-icons-left">
                             <input class="input" type="text" name="imageUrl" value="<%=product?.imageUrl%>">
                             <span class="icon is-small is-left">
                                 <i class="fas fa-image"></i>
                             </span>
-                            </p>
+                            </p> -->
+                            <div class="file is-normal has-name" id="imageUploadContainer">
+                                <label class="file-label" style="width: 100%;">
+                                    <input class="file-input" type="file" name="image">
+                                    <span class="file-cta">
+                                        <span class="file-icon">
+                                            <i class="fas fa-upload"></i>
+                                        </span>
+                                        <span class="file-label">Image</span>
+                                    </span>
+                                    <span class="file-name" style="max-width: unset; width: 100%;">Image...</span>
+                                </label>
+                            </div>
+                            <script>
+                                const fileInput = document.querySelector('#imageUploadContainer input[type=file]');
+                                fileInput.onchange = () => {
+                                    if (fileInput.files.length > 0) {
+                                        const fileName = document.querySelector('#imageUploadContainer .file-name');
+                                        fileName.textContent = fileInput.files[0].name;
+                                    }
+                                }
+                              </script>
                         </div>             
                     </div>
                 </div> 
