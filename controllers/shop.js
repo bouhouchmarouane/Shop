@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const Order = require('../models/order');
 const Product = require('../models/product');
 
@@ -11,9 +14,7 @@ exports.getIndex = (req, res) => {
             });
         })
         .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
+            return next(error);
         });
 }
 
@@ -27,9 +28,7 @@ exports.getProductsList = (req, res) => {
             });
         })
         .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
+            return next(error);
         });
 }
 
@@ -55,9 +54,7 @@ exports.getCart = (req, res) => {
             });
         })
         .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
+            return next(error);
         });
 }
 
@@ -69,9 +66,7 @@ exports.PostCart = (req, res) => {
         })
         .then(() => res.redirect('/cart'))
         .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
+            return next(error);
         });
 }
 
@@ -85,9 +80,7 @@ exports.getOrders = (req, res) => {
             });
         })
         .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
+            return next(error);
         });
 }
 
@@ -96,9 +89,7 @@ exports.deleteFromCart = (req, res) => {
     req.user.deleteFromCart(productId)
         .then(() => res.redirect('/cart'))
         .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
+            return next(error);
         });
 }
 
@@ -121,8 +112,16 @@ exports.createOrder = (req, res) => {
         .then(() => req.user.clearCart())
         .then(() => res.redirect('/orders'))
         .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
+            return next(error);
         });
+}
+
+exports.getInvoice = (req, res, next) => {
+    const orderId = req.params.orderId;
+    const invoiceFileName = 'invoice-' + orderId + '.pdf';
+    const invoicePath = path.join('data', 'invoices', invoiceFileName);
+    fs.readFile(invoicePath, (error, data) => {
+        if(error) return next(error);
+        res.send(data);
+    })
 }
