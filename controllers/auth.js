@@ -30,7 +30,7 @@ exports.getLogin = (req, res) => {
     });
 }
 
-exports.postLogin = (req, res) => {
+exports.postLogin = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
     const errors = validationResult(req);
@@ -67,9 +67,7 @@ exports.postLogin = (req, res) => {
                     res.redirect('/auth/login');
                 })
         })
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
 exports.getSignup = (req, res) => {
@@ -85,7 +83,7 @@ exports.getSignup = (req, res) => {
     });
 }
 
-exports.PostSignup = (req, res) => {
+exports.PostSignup = (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
@@ -116,9 +114,7 @@ exports.PostSignup = (req, res) => {
             return newUser.save();
         })
         .then(() => res.redirect('/auth/login'))
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
 exports.postLogout = (req, res) => {
@@ -135,7 +131,7 @@ exports.getResetPassword = (req, res) => {
     });
 }
 
-exports.postResetPassword = (req, res) => {
+exports.postResetPassword = (req, res, next) => {
     crypto.randomBytes(32, (error, buffer) => {
         if(error) {
             console.log(error);
@@ -160,13 +156,11 @@ exports.postResetPassword = (req, res) => {
                     <b>Click <a href="http://localhost:80/auth/reset-password/${token}">this link</a> to set a new password</b>
                 `)
             })
-            .catch(error => {
-                return next(error);
-            });
+            .catch(error => next(error));
     })
 }
 
-exports.getNewPassword = (req, res) => {
+exports.getNewPassword = (req, res, next) => {
     const token = req.params.token;
     User.findOne({resetToken: token, resetTokenExpiration: {$gt: Date.now()}})
         .then(user => {
@@ -181,13 +175,11 @@ exports.getNewPassword = (req, res) => {
                 userId: user._id.toString(),
                 resetToken: token
         })
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
     });
 }
 
-exports.postNewPassword = (req, res) => {
+exports.postNewPassword = (req, res, next) => {
     const newPassword = req.body.password;
     const userId = req.body.userId;
     const resetToken = req.body.resetToken;
@@ -208,9 +200,7 @@ exports.postNewPassword = (req, res) => {
             return resetUser.save();
         })
         .then(() => res.redirect('/auth/login'))
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
 const sendEmail = (email, subject, htmlText) => {

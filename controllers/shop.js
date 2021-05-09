@@ -4,7 +4,7 @@ const path = require('path');
 const Order = require('../models/order');
 const Product = require('../models/product');
 
-exports.getIndex = (req, res) => {
+exports.getIndex = (req, res, next) => {
     Product.find()
         .then(products => {
             res.render('shop/products-list', {
@@ -13,12 +13,10 @@ exports.getIndex = (req, res) => {
                 products
             });
         })
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
-exports.getProductsList = (req, res) => {
+exports.getProductsList = (req, res, next) => {
     Product.find()
         .then(products => {
             res.render('shop/products-list', {
@@ -27,9 +25,7 @@ exports.getProductsList = (req, res) => {
                 products
             });
         })
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
 exports.getProductDetails = (req, res) => {
@@ -44,7 +40,7 @@ exports.getProductDetails = (req, res) => {
         });
 }
 
-exports.getCart = (req, res) => {
+exports.getCart = (req, res, next) => {
     req.user.populate('cart.productId').execPopulate()
         .then(user => {
             res.render('shop/cart', {
@@ -53,24 +49,20 @@ exports.getCart = (req, res) => {
                 items: user.cart
             });
         })
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
-exports.PostCart = (req, res) => {
+exports.PostCart = (req, res, next) => {
     const productId = req.body.productId;
     Product.findById(productId)
         .then(product => {
             return req.user.addToCart(product);
         })
         .then(() => res.redirect('/cart'))
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
-exports.getOrders = (req, res) => {
+exports.getOrders = (req, res, next) => {
     Order.find({"userId": req.user}).sort({ date: -1 })
         .then(orders => {
             res.render('shop/orders', {
@@ -79,21 +71,17 @@ exports.getOrders = (req, res) => {
                 orders
             });
         })
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
-exports.deleteFromCart = (req, res) => {
+exports.deleteFromCart = (req, res, next) => {
     const productId = req.body.productId;
     req.user.deleteFromCart(productId)
         .then(() => res.redirect('/cart'))
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
-exports.createOrder = (req, res) => {
+exports.createOrder = (req, res, next) => {
     req.user.populate('cart.productId').execPopulate()
         .then(user => {
             const products = user.cart.map(item => {
@@ -111,19 +99,24 @@ exports.createOrder = (req, res) => {
         })
         .then(() => req.user.clearCart())
         .then(() => res.redirect('/orders'))
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
 exports.getInvoice = (req, res, next) => {
     const orderId = req.params.orderId;
-    const invoiceFileName = 'invoice-' + orderId + '.pdf';
-    const invoicePath = path.join('data', 'invoices', invoiceFileName);
-    fs.readFile(invoicePath, (error, data) => {
-        if(error) return next(error);
-        res.setHeader('Content-type', 'application/pdf');
-        res.setHeader('Content-disposition', 'attachement; filename="' + invoiceFileName + '"');
-        res.send(data);
-    })
+    Order.findOne({_id: orderId, userId: req.user._id})
+        .then(order => {
+            if(!order) {
+                return next(new Error('Unauthorized'));
+            }
+            const invoiceFileName = 'invoice-' + orderId + '.pdf';
+            const invoicePath = path.join('data', 'invoices', invoiceFileName);
+            fs.readFile(invoicePath, (error, data) => {
+                if(error) return next(error);
+                res.setHeader('Content-type', 'application/pdf');
+                res.setHeader('Content-disposition', 'attachement; filename="' + invoiceFileName + '"');
+                res.send(data);
+            })
+        })
+        .catch(error => next(error));
 }

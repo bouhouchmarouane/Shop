@@ -10,7 +10,7 @@ exports.getAddProduct = (req, res) => {
     });
 }
 
-exports.getEditProduct = (req, res) => {
+exports.getEditProduct = (req, res, next) => {
     const productId = req.params.productId;
     Product.findOne({_id: productId, userId: req.user._id})
         .then(product => {
@@ -24,12 +24,10 @@ exports.getEditProduct = (req, res) => {
                 product
             });
         })
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
-exports.postSaveProduct = (req, res) => {
+exports.postSaveProduct = (req, res, next) => {
     const id = req.body.id;
     const title = req.body.title;
     const price = req.body.price;
@@ -77,9 +75,7 @@ exports.postSaveProduct = (req, res) => {
                 product.description = description;
                 product.save()
                     .then(() => res.redirect('/admin/products-list'))
-                    .catch(error => {
-                        return next(error);
-                    });
+                    .catch(error => next(error));
             });
     }
     else {
@@ -92,13 +88,11 @@ exports.postSaveProduct = (req, res) => {
         });
         product.save()
             .then(() => res.redirect('/admin/products-list'))
-            .catch(error => {
-                return next(error);
-            });
+            .catch(error => next(error));
     }
 }
 
-exports.getProductsList = (req, res) => {
+exports.getProductsList = (req, res, next) => {
     Product.find({userId: req.user._id})
         .then(products => {
             res.render('admin/products-list', {
@@ -108,17 +102,13 @@ exports.getProductsList = (req, res) => {
                 messageError: req.flash('errorMessages')
             });
         })
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
 exports.deleteProduct = (req, res) => {
     const productId = req.body.productId;
     Product.deleteOne({_id: productId, userId: req.user._id})
         .then(() => res.redirect('/admin/products-list'))
-        .catch(error => {
-            return next(error);
-        });
+        .catch(error => next(error));
 }
 
