@@ -8,7 +8,7 @@ const Product = require('../models/product');
 exports.getIndex = (req, res, next) => {
     Product.find()
         .then(products => {
-            res.render('shop/products-list', {
+            res.render('shop/', {
                 pageTitle: 'Shop',
                 path: '/shop/index',
                 products
