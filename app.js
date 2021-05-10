@@ -73,6 +73,7 @@ app.use('/admin', adminRoutes);
 app.use(shopRoutes);
 app.use('/auth', authRoutes);
 app.use((error, req, res, next) => {
+    console.log(error);
     const errorMessages = []
     errorMessages.push(error.toString())
     res.status(500).render('errors/500', {

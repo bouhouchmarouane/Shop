@@ -1,6 +1,7 @@
 const {validationResult} = require('express-validator/check');
 
 const Product = require('../models/product');
+const fileHelper = require('../util/file');
 
 exports.getAddProduct = (req, res) => {
     res.render('admin/edit-product', {
@@ -32,7 +33,6 @@ exports.postSaveProduct = (req, res, next) => {
     const title = req.body.title;
     const price = req.body.price;
     const image = req.file;
-    const imageUrl = "/" + image.path;
     const description = req.body.description;
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -64,14 +64,16 @@ exports.postSaveProduct = (req, res, next) => {
     if(id !== '') {
         return Product.findById(id)
             .then(product => {
+                if(image) {
+                    fileHelper.deleteFile(product.imageUrl);
+                    product.imageUrl = "/" + image.path;
+                }
                 if(!product.userId.equals(req.user._id)) {
                     req.flash('errorMessages', 'Invalid userId');
                     return res.redirect('/admin/products-list');
                 }
                 product.title = title;
                 product.price = price;
-                if(image)
-                    product.imageUrl = imageUrl;
                 product.description = description;
                 product.save()
                     .then(() => res.redirect('/admin/products-list'))
@@ -79,6 +81,10 @@ exports.postSaveProduct = (req, res, next) => {
             });
     }
     else {
+        let imageUrl;
+        if(image) {
+            imageUrl = "/" + image.path;
+        }
         const product = new Product({
             title: title, 
             price: price, 
@@ -107,7 +113,11 @@ exports.getProductsList = (req, res, next) => {
 
 exports.deleteProduct = (req, res, next) => {
     const productId = req.body.productId;
-    Product.deleteOne({_id: productId, userId: req.user._id})
+    Product.findById(productId)
+        .then(product => {
+            fileHelper.deleteFile(product.imageUrl);
+            return Product.deleteOne({_id: productId, userId: req.user._id})
+        })
         .then(() => res.redirect('/admin/products-list'))
         .catch(error => next(error));
 }
