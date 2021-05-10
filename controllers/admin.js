@@ -1,6 +1,7 @@
 const {validationResult} = require('express-validator/check');
 
 const Product = require('../models/product');
+const fileHelper = require('../util/file');
 
 exports.getAddProduct = (req, res) => {
     res.render('admin/edit-product', {
@@ -10,7 +11,7 @@ exports.getAddProduct = (req, res) => {
     });
 }
 
-exports.getEditProduct = (req, res) => {
+exports.getEditProduct = (req, res, next) => {
     const productId = req.params.productId;
     Product.findOne({_id: productId, userId: req.user._id})
         .then(product => {
@@ -24,18 +25,14 @@ exports.getEditProduct = (req, res) => {
                 product
             });
         })
-        .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
-        });
+        .catch(error => next(error));
 }
 
-exports.postSaveProduct = (req, res) => {
+exports.postSaveProduct = (req, res, next) => {
     const id = req.body.id;
     const title = req.body.title;
     const price = req.body.price;
-    const imageUrl = req.body.imageUrl;
+    const image = req.file;
     const description = req.body.description;
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -67,24 +64,27 @@ exports.postSaveProduct = (req, res) => {
     if(id !== '') {
         return Product.findById(id)
             .then(product => {
+                if(image) {
+                    fileHelper.deleteFile(product.imageUrl);
+                    product.imageUrl = "/" + image.path;
+                }
                 if(!product.userId.equals(req.user._id)) {
                     req.flash('errorMessages', 'Invalid userId');
                     return res.redirect('/admin/products-list');
                 }
                 product.title = title;
                 product.price = price;
-                product.imageUrl = imageUrl;
                 product.description = description;
                 product.save()
                     .then(() => res.redirect('/admin/products-list'))
-                    .catch(error => {
-                        const err = new Error(error);
-                        err.httpStatusCode = 500;
-                        return next(err);
-                    });
+                    .catch(error => next(error));
             });
     }
     else {
+        let imageUrl;
+        if(image) {
+            imageUrl = "/" + image.path;
+        }
         const product = new Product({
             title: title, 
             price: price, 
@@ -94,15 +94,11 @@ exports.postSaveProduct = (req, res) => {
         });
         product.save()
             .then(() => res.redirect('/admin/products-list'))
-            .catch(error => {
-                const err = new Error(error);
-                err.httpStatusCode = 500;
-                return next(err);
-            });
+            .catch(error => next(error));
     }
 }
 
-exports.getProductsList = (req, res) => {
+exports.getProductsList = (req, res, next) => {
     Product.find({userId: req.user._id})
         .then(products => {
             res.render('admin/products-list', {
@@ -112,21 +108,17 @@ exports.getProductsList = (req, res) => {
                 messageError: req.flash('errorMessages')
             });
         })
-        .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
-        });
+        .catch(error => next(error));
 }
 
-exports.deleteProduct = (req, res) => {
+exports.deleteProduct = (req, res, next) => {
     const productId = req.body.productId;
-    Product.deleteOne({_id: productId, userId: req.user._id})
+    Product.findById(productId)
+        .then(product => {
+            fileHelper.deleteFile(product.imageUrl);
+            return Product.deleteOne({_id: productId, userId: req.user._id})
+        })
         .then(() => res.redirect('/admin/products-list'))
-        .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
-        });
+        .catch(error => next(error));
 }
 

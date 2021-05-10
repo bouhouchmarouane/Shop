@@ -1,7 +1,11 @@
+const fs = require('fs');
+const path = require('path');
+const PDFDocument = require('pdfkit');
+
 const Order = require('../models/order');
 const Product = require('../models/product');
 
-exports.getIndex = (req, res) => {
+exports.getIndex = (req, res, next) => {
     Product.find()
         .then(products => {
             res.render('shop/products-list', {
@@ -10,14 +14,10 @@ exports.getIndex = (req, res) => {
                 products
             });
         })
-        .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
-        });
+        .catch(error => next(error));
 }
 
-exports.getProductsList = (req, res) => {
+exports.getProductsList = (req, res, next) => {
     Product.find()
         .then(products => {
             res.render('shop/products-list', {
@@ -26,11 +26,7 @@ exports.getProductsList = (req, res) => {
                 products
             });
         })
-        .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
-        });
+        .catch(error => next(error));
 }
 
 exports.getProductDetails = (req, res) => {
@@ -45,7 +41,7 @@ exports.getProductDetails = (req, res) => {
         });
 }
 
-exports.getCart = (req, res) => {
+exports.getCart = (req, res, next) => {
     req.user.populate('cart.productId').execPopulate()
         .then(user => {
             res.render('shop/cart', {
@@ -54,28 +50,20 @@ exports.getCart = (req, res) => {
                 items: user.cart
             });
         })
-        .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
-        });
+        .catch(error => next(error));
 }
 
-exports.PostCart = (req, res) => {
+exports.PostCart = (req, res, next) => {
     const productId = req.body.productId;
     Product.findById(productId)
         .then(product => {
             return req.user.addToCart(product);
         })
         .then(() => res.redirect('/cart'))
-        .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
-        });
+        .catch(error => next(error));
 }
 
-exports.getOrders = (req, res) => {
+exports.getOrders = (req, res, next) => {
     Order.find({"userId": req.user}).sort({ date: -1 })
         .then(orders => {
             res.render('shop/orders', {
@@ -84,21 +72,17 @@ exports.getOrders = (req, res) => {
                 orders
             });
         })
-        .catch(error => console.log(error));
+        .catch(error => next(error));
 }
 
-exports.deleteFromCart = (req, res) => {
+exports.deleteFromCart = (req, res, next) => {
     const productId = req.body.productId;
     req.user.deleteFromCart(productId)
         .then(() => res.redirect('/cart'))
-        .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
-        });
+        .catch(error => next(error));
 }
 
-exports.createOrder = (req, res) => {
+exports.createOrder = (req, res, next) => {
     req.user.populate('cart.productId').execPopulate()
         .then(user => {
             const products = user.cart.map(item => {
@@ -116,9 +100,36 @@ exports.createOrder = (req, res) => {
         })
         .then(() => req.user.clearCart())
         .then(() => res.redirect('/orders'))
-        .catch(error => {
-            const err = new Error(error);
-            err.httpStatusCode = 500;
-            return next(err);
-        });
+        .catch(error => next(error));
+}
+
+exports.getInvoice = (req, res, next) => {
+    const orderId = req.params.orderId;
+    Order.findOne({_id: orderId, userId: req.user._id})
+        .then(order => {
+            if(!order) {
+                return next(new Error('Unauthorized'));
+            }
+            const invoiceFileName = 'invoice-' + orderId + '.pdf';
+            const invoicePath = path.join('data', 'invoices', invoiceFileName);
+
+            const pdfDoc = new PDFDocument();
+            res.setHeader('Content-type', 'application/pdf');
+            res.setHeader('Content-disposition', 'inline; filename="' + invoiceFileName + '"');
+            pdfDoc.pipe(fs.createWriteStream(invoicePath));
+            pdfDoc.pipe(res);
+            
+            let totalPrice = 0
+            pdfDoc.fontSize(26).text('Invoice ' + orderId);
+            pdfDoc.text('------------------------------------------------------');
+            order.items.forEach(item => {
+                pdfDoc.fontSize(12).text(item.product.title + ' ' + item.quantity + ' x ' + item.product.price + "MAD = " + (item.product.price * item.quantity) + "MAD");
+                totalPrice += item.product.price * item.quantity;
+            });
+            pdfDoc.text('------------------------------');
+            pdfDoc.fontSize(16).text("Total price : " + totalPrice + "MAD");
+
+            pdfDoc.end();
+        })
+        .catch(error => next(error));
 }
