@@ -28,11 +28,28 @@
                         </footer>
                     </div>
                 </div>
-                <%if(index % 5 == 4) { %>
+                <%if(index % 5 == 4 || index == products.length - 1) { %>
                     </div>
                 <%} %>
                 <%-include('../includes/add-to-cart-form.ejs', {productId: product._id})%>
             <%}) %>
+            <div class="columns">
+                <div class="column is-full">
+                <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+                    <%if(hasPreviousPage) {%>
+                        <a class="pagination-previous" href="?page=<%=previousPage %>">Previous</a>
+                    <%} %>
+                    <%if(hasNextPage) {%>
+                        <a class="pagination-next" href="?page=<%=nextPage %>">Next page</a>
+                    <%} %>
+                    <ul class="pagination-list">
+                        <%for(let i = 1; i <= totalPages; i++) {%>
+                            <li><a href="?page=<%=i%>" class="pagination-link <%=i == page ? 'is-current' : ''%>" aria-label="Goto page <%=i%>"><%=i%></a></li>
+                        <%} %>
+                    </ul>
+                </nav>
+                </div>
+            </div>         
         <%} else {%>
             <h2>No products found</h2>
         <%}%>
