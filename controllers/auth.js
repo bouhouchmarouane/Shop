@@ -1,11 +1,12 @@
 const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
+const {validationResult} = require('express-validator/check');
 
 const crypto = require('crypto');
 
 const User = require('../models/user');
 
-var transporter = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'marouanebhch@gmail.com',
@@ -21,17 +22,35 @@ exports.getLogin = (req, res) => {
     res.render('auth/login', {
         pageTitle: 'Login',
         path: '/auth/login',
-        errorMessage: req.flash('errorMessage')
+        errorMessages: req.flash('errorMessages'),
+        inputs: {
+            email: "",
+            password: ""
+        }
     });
 }
 
-exports.postLogin = (req, res) => {
+exports.postLogin = (req, res, next) => {
     const email = req.body.email;
     const password = req.body.password;
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        const errorMessages = [...new Set(errors.array().map(error => error.msg))];
+        return res.status(422).render('auth/login', {
+            pageTitle: 'Login',
+            path: '/auth/login',
+            errorMessages,
+            inputs: {
+                email,
+                password
+            },
+            validationErrors: errors.array()
+        });
+    }
     User.findOne({email})
         .then(user => {
             if(!user) {
-                req.flash('errorMessage', 'Invalid email or password');
+                req.flash('errorMessages', 'Invalid email or password');
                 return res.redirect('/auth/login');
             }
             bcrypt.compare(password, user.password)
@@ -44,45 +63,58 @@ exports.postLogin = (req, res) => {
                             res.redirect('/');
                         });
                     }
-                    req.flash('errorMessage', 'Invalid email or password');
+                    req.flash('errorMessages', 'Invalid email or password');
                     res.redirect('/auth/login');
                 })
         })
-        .catch(error => console.log(error));
+        .catch(error => next(error));
 }
 
 exports.getSignup = (req, res) => {
     res.render('auth/signup', {
         pageTitle: 'Sign up',
         path: '/auth/signup',
-        errorMessage: req.flash('errorMessage')
+        errorMessages: req.flash('errorMessages'),
+        inputs: {  
+            name: "",
+            email: "",
+            password: ""
+        }
     });
 }
 
-exports.PostSignup = (req, res) => {
+exports.PostSignup = (req, res, next) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
-    User.findOne({email})
-        .then(user => {
-            if(user) {
-                req.flash('errorMessage', 'This email has been already used');
-                return res.redirect('/auth/signup');
-            }
-            sendEmail(email, 'Welcome aboard', '<h1>Welcome to Shop ' + name + '</h1>');
-            bcrypt.hash(password, 12)
-                .then(hashedPassword => {
-                    const newUser = new User({
-                        name,
-                        email,
-                        password: hashedPassword,
-                        cart: []
-                    });
-                    return newUser.save();
-                })
-                .then(() => res.redirect('/auth/login'));
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        const errorMessages = [...new Set(errors.array().map(error => error.msg))];
+        return res.status(422).render('auth/signup', {
+            pageTitle: 'Sign up',
+            path: '/auth/signup',
+            errorMessages: errors,
+            inputs: {  
+                name,
+                email,
+                password
+            },
+            validationErrors: errors.array()
+        });
+    }    
+    sendEmail(email, 'Welcome aboard', '<h1>Welcome to Shop ' + name + '</h1>');
+    bcrypt.hash(password, 12)
+        .then(hashedPassword => {
+            const newUser = new User({
+                name,
+                email,
+                password: hashedPassword,
+                cart: []
+            });
+            return newUser.save();
         })
-        .catch(error => console.log(error));
+        .then(() => res.redirect('/auth/login'))
+        .catch(error => next(error));
 }
 
 exports.postLogout = (req, res) => {
@@ -95,22 +127,22 @@ exports.getResetPassword = (req, res) => {
     res.render('auth/reset-password', {
         pageTitle: 'Reset password',
         path: '/auth/reset-password',
-        errorMessage: req.flash('errorMessage')
+        errorMessages: req.flash('errorMessages')
     });
 }
 
-exports.postResetPassword = (req, res) => {
+exports.postResetPassword = (req, res, next) => {
     crypto.randomBytes(32, (error, buffer) => {
         if(error) {
             console.log(error);
-            req.flash('errorMessage', 'An error has occured');
+            req.flash('errorMessages', 'An error has occured');
             return res.redirect('/auth/reset-password');
         }
         const token = buffer.toString('hex');
         User.findOne({email: req.body.email})
             .then(user => {
                 if(!user) {
-                    req.flash('errorMessage', 'No account with that email address');
+                    req.flash('errorMessages', 'No account with that email address');
                     return res.redirect('/auth/reset-password');
                 }
                 user.resetToken = token;
@@ -124,30 +156,30 @@ exports.postResetPassword = (req, res) => {
                     <b>Click <a href="http://localhost:80/auth/reset-password/${token}">this link</a> to set a new password</b>
                 `)
             })
-            .catch(error => console.log(error));
+            .catch(error => next(error));
     })
 }
 
-exports.getNewPassword = (req, res) => {
+exports.getNewPassword = (req, res, next) => {
     const token = req.params.token;
     User.findOne({resetToken: token, resetTokenExpiration: {$gt: Date.now()}})
         .then(user => {
             if(!user) {
-                req.flash('errorMessage', 'No account with that email address');
+                req.flash('errorMessages', 'No account with that email address');
                 return res.redirect('/auth/reset-password');
             }
             res.render('auth/new-password', {
                 pageTitle: 'New password',
                 path: '/auth/new-password',
-                errorMessage: req.flash('errorMessage'),
+                errorMessages: req.flash('errorMessages'),
                 userId: user._id.toString(),
                 resetToken: token
         })
-        .catch(error => console.log(error));
+        .catch(error => next(error));
     });
 }
 
-exports.postNewPassword = (req, res) => {
+exports.postNewPassword = (req, res, next) => {
     const newPassword = req.body.password;
     const userId = req.body.userId;
     const resetToken = req.body.resetToken;
@@ -168,7 +200,7 @@ exports.postNewPassword = (req, res) => {
             return resetUser.save();
         })
         .then(() => res.redirect('/auth/login'))
-        .catch(error => console.log(error));
+        .catch(error => next(error));
 }
 
 const sendEmail = (email, subject, htmlText) => {
