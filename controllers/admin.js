@@ -112,13 +112,16 @@ exports.getProductsList = (req, res, next) => {
 }
 
 exports.deleteProduct = (req, res, next) => {
-    const productId = req.body.productId;
+    const productId = req.params.productId;
     Product.findById(productId)
         .then(product => {
             fileHelper.deleteFile(product.imageUrl);
             return Product.deleteOne({_id: productId, userId: req.user._id})
         })
-        .then(() => res.redirect('/admin/products-list'))
-        .catch(error => next(error));
+        .then(() => res.status(200).json({ message: 'OK' }))
+        .catch(error => {
+            res.status(500).json({ message: 'KO' })
+            next(error)
+        });
 }
 
