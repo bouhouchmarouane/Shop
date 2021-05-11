@@ -118,10 +118,10 @@ exports.deleteProduct = (req, res, next) => {
             fileHelper.deleteFile(product.imageUrl);
             return Product.deleteOne({_id: productId, userId: req.user._id})
         })
-        .then(() => res.json({result: true}))
+        .then(() => res.status(200).json({ message: 'OK' }))
         .catch(error => {
-            res.json({result: false});
-            next(error);
+            res.status(500).json({ message: 'KO' })
+            next(error)
         });
 }
 

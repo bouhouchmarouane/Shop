@@ -27,7 +27,7 @@
                         </div>
                         <footer class="card-footer">
                             <a href="/admin/edit-product/<%=product._id%>" class="card-footer-item">Edit</a>
-                            <a href="javascript:if(confirm('Are you sure to delete this product ?'))deleteProduct('<%=product._id%>', '<%=csrfToken%>')" 
+                            <a onclick="if(confirm('Are you sure to delete this product ?'))deleteProduct(this, '<%=product._id%>', '<%=csrfToken%>')" 
                                 class="card-footer-item" style="background-color: tomato; color: white">Delete</a>
                         </footer>
                     </div>
